@@ -56,22 +56,25 @@ export default {
                     const { name, password } = payload;
                     const user = await UserModel.findOne({ name: name })
 
-                    const password_is_valid = await bcrypt.compare(password, user.password)
 
                     if (!user)
                         console.log("username does not exist")
-                    else if (!password_is_valid)
-                        console.log("wrong password")
                     else {
-                        sendData(["LOGIN", true], ws)
-                        console.log("successfully login")
-                        const messages = []
-                        const Bets = await BetModel.find();
-                        for (let i = 0; i < Bets.length; i++) {
-                            messages.push({ id: Bets[i]._id, title: Bets[i].title, challenger: Bets[i].challenger })
+                        const password_is_valid = await bcrypt.compare(password, user.password)
+                        if (!password_is_valid)
+                            console.log("wrong password")
+                        else {
+                            sendData(["LOGIN", true], ws)
+                            console.log("successfully login")
+                            const messages = []
+                            const Bets = await BetModel.find();
+                            for (let i = 0; i < Bets.length; i++) {
+                                messages.push({ id: Bets[i]._id, title: Bets[i].title, challenger: Bets[i].challenger })
+                            }
+                            sendData(["INIT", messages], ws)
                         }
-                        sendData(["INIT", messages], ws)
                     }
+
                     break
                 }
                 case 'END_BET': {

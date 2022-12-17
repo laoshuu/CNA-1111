@@ -1,7 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import FormItem from "antd/es/form/FormItem"
 
-import { Button, Checkbox, Form, Input, Space, Modal, Card } from 'antd';
+import { Divider, Typography } from 'antd';
+
+import { UserOutlined, HomeOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Space, Modal, Card, Menu, Tabs } from 'antd';
+// import { SmileOutlined, User } from '@ant-design/icons';
+import UserPage from './UserPage';
 import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import { Radio } from 'antd';
@@ -10,19 +15,32 @@ import { useNavigate } from "react-router-dom";
 
 import styled from 'styled-components';
 
+const { Title, Paragraph, Text, Link } = Typography;
 const CardWrapper = styled.div`
     display: flex;
     overflow: auto;
     flex-direction: column;
     width: 100%;
-    margin: 100px;
+    margin-bottom: 100px;
+    margin-top: 10px;
 }
 `
 const StyledCard = styled(Card)`
     width: 95%;
     margin: 10px
-    
 `;
+
+const StyledBotton = styled(Button)`
+    width: 40%;
+    height: 10%;
+    margin: 10px
+`;
+
+const StyledMenu = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
 const MainPage = () => {
     const { bet, name, createBet, makeBet } = useChat();
     const [betTitle, setBetTitle] = useState('');
@@ -62,11 +80,24 @@ const MainPage = () => {
     const bodyRef = useRef(null);
 
     const [form] = Form.useForm()
+
+    // const [current, setCurrent] = useState('main');
+    // const onClick = (e) => {
+    //     console.log('click ', e);
+    //     setCurrent(e.key);
+    // };
+
     return (
         <>
+            <Title> All Bets Page </Title>
+            {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} /> */}
+            {/* <StyledMenu> */}
+                <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
+                <StyledBotton icon={<HomeOutlined />} onClick={() => setTmp(true)} > Back to home page </StyledBotton>
+            {/* </StyledMenu> */}
             <CardWrapper>
                 {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
-                    <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title) }>
+                    <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title)}>
                         <p>challenger: {e.challenger}</p>
                     </StyledCard>
 
@@ -115,7 +146,6 @@ const MainPage = () => {
 
                 </Form>
             </Modal>
-            <Button onClick={() => setTmp(true)} >nooooo</Button>
         </>
     );
 }
