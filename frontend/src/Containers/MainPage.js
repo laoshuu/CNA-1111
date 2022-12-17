@@ -19,7 +19,9 @@ const MainPage = () => {
     const [tmp, setTmp] = useState(false)
 
     useEffect(() => {
-        navigate("/user")
+        if (tmp) {
+            navigate("/user")
+        }
     }, [tmp]);
 
     const navigate = useNavigate()

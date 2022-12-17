@@ -33,7 +33,7 @@ export default function App() {
         </Route>
       </Routes>
     </Wrapper>
-  )
+  );
 }
 
 function NoMatch() {
