@@ -8,8 +8,21 @@ import { Radio } from 'antd';
 import { useChat } from '../Hooks/useChat';
 import { useNavigate } from "react-router-dom";
 
+import styled from 'styled-components';
 
-
+const CardWrapper = styled.div`
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+    width: 100%;
+    margin: 100px;
+}
+`
+const StyledCard = styled(Card)`
+    width: 95%;
+    margin: 10px
+    
+`;
 const MainPage = () => {
     const { bet, name, createBet, makeBet } = useChat();
     const [betTitle, setBetTitle] = useState('');
@@ -21,9 +34,9 @@ const MainPage = () => {
     const [tmp, setTmp] = useState(false)
 
     useEffect(() => {
-        if (tmp === true)
+        if (tmp) {
             navigate("/user")
-
+        }
     }, [tmp]);
 
     const navigate = useNavigate()
@@ -51,12 +64,17 @@ const MainPage = () => {
     const [form] = Form.useForm()
     return (
         <>
-            {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
-                <Card id={e.id} key={e.id} title={e.title} bordered={true} style={{ width: 300 }} onClick={() => showModal(e.id, e.title)}>
-                    <p>challenger: {e.challenger}</p>
-                </Card>
-            </>))
-            }
+
+            <CardWrapper>
+                {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
+                    <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title) }>
+                        <p>challenger: {e.challenger}</p>
+                    </StyledCard>
+
+                </>))
+                }
+            </CardWrapper>
+
 
             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} title={betTitle}
                 okText='開賭'
