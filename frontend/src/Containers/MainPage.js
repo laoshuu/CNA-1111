@@ -23,10 +23,11 @@ const CardWrapper = styled.div`
     width: 100%;
     margin-bottom: 100px;
     margin-top: 10px;
-}
-`
+`;
+
 const StyledCard = styled(Card)`
     width: 95%;
+    lengyh
     margin: 10px
 `;
 
@@ -95,6 +96,7 @@ const MainPage = () => {
                 <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
                 <StyledBotton icon={<HomeOutlined />} onClick={() => setTmp(true)} > Back to home page </StyledBotton>
             {/* </StyledMenu> */}
+
             <CardWrapper>
                 {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
                     <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title)}>
@@ -104,6 +106,7 @@ const MainPage = () => {
                 </>))
                 }
             </CardWrapper>
+
 
             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} title={betTitle}
                 okText='開賭'

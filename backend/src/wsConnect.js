@@ -21,27 +21,37 @@ export default {
                 case 'CREATE_BET': {
                     const { title, user_name } = payload;
                     const user = await UserModel.findOne({ name: user_name })
-                    console.log(user._id)
                     const Bet = new BetModel({ title: title, challenger: user.id })
                     await Bet.save()
+                    broadcastMessage(
+                        wss,
+                        ['NEW_BET', [{ id: Bet._id, title: title, challenger: user._id }]],
+                        {
+                            type: 'success',
+                            msg: `New bet created by ${user.name}!`
+                        })
                     break
                 }
                 case 'MAKE_BET': {
-                    const { bet_id, username, choice_name, money } = payload;
-                    console.log(payload)
-                    // const user = await UserModel.findOne({ name: username })
+                    const { bet_id, username, choice_name, bet_money } = payload;
+                    const user = await UserModel.findOne({ name: username })
                     // const choice = await ChoiceModel.findOne({ bet_id: bet_id, name: choice_name })
-                    // const newBet = new UserChoiceModel({ user: user._id, choice: choice._id, bet_money: money })
-                    // newBet.save()
+                    // check enough money
+                    if (user.money < bet_money)
+                        sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
+                    else {
+                        await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -bet_money } })
+                        const newBet = new UserChoiceModel({ user: user._id, bet_id: bet_id, choice: choice_name, bet_money: bet_money })
+                        newBet.save()
+                    }
                     break
                 }
                 case 'REGISTER': {
                     const { name, password } = payload;
-                    console.log(payload)
                     // check user already exist
                     const user = await UserModel.findOne({ name: name })
                     if (user)
-                        console.log("username already taken")
+                        sendData(["status", { type: "error", msg: "Username already taken" }], ws)
                     else {
                         const salt = await bcrypt.genSalt(10);
                         const hashPassword = await bcrypt.hash(password, salt)
@@ -49,28 +59,29 @@ export default {
                         newUser.save()
                         sendData(["REGISTER", true], ws)
                     }
-
                     break
                 }
                 case 'LOGIN': {
                     const { name, password } = payload;
                     const user = await UserModel.findOne({ name: name })
 
-
                     if (!user)
-                        console.log("username does not exist")
+                        sendData(["status", { type: "error", msg: "Username does not exist" }], ws)
                     else {
                         const password_is_valid = await bcrypt.compare(password, user.password)
                         if (!password_is_valid)
-                            console.log("wrong password")
+                            sendData(["status", { type: "error", msg: "Wrong password" }], ws)
+
                         else {
                             sendData(["LOGIN", true], ws)
-                            console.log("successfully login")
+                            sendData(["status", { type: "success", msg: "Successfully Login!" }], ws)
+
                             const messages = []
-                            const Bets = await BetModel.find();
-                            for (let i = 0; i < Bets.length; i++) {
-                                messages.push({ id: Bets[i]._id, title: Bets[i].title, challenger: Bets[i].challenger })
-                            }
+                            await BetModel.find().populate("challenger").then((res) => {
+                                console.log(res)
+                                res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
+                            });
+
                             sendData(["INIT", messages], ws)
                         }
                     }
@@ -81,17 +92,21 @@ export default {
                     const { bet_id, result } = payload;
 
                     const choices = await ChoiceModel.find({ bet_id: bet_id })
-                    const correct_choice = await choices.findOne({ name: result })
+                    const correct_choice = await UserChoiceModel.find({ bet_id: bet_id, choice: result })
 
                     let correct_num, wrong_num, correct_money, wrong_money, challenger_award;
+                    correct_num = correct_choice.count()
+                    wrong_num = choices.count() - correct_num
+                    // calculate correct_money, wrong_money
 
-                    if (correct_choice.name === 'Success') {
+
+                    if (correct_choice.choice === 'Success') {
                         if (correct_num === 0)
                             challenger_award = correct_money + wrong_money;
                         else
                             challenger_award = fail_money / (success_num + 1)
                     }
-                    else if (correct_choice.name === 'Fail') {
+                    else if (correct_choice.choice === 'Fail') {
                         challenger_award = 0
                     }
 
@@ -100,8 +115,8 @@ export default {
                     const challenger = Bet.challenger
                     await UserModel.updateOne({ "name": challenger }, { $inc: { "money": challenger_award } })
                     // Bet makers get rewards
-                    const win_bet = await UserChoiceModel.find({ choice: correct_choice._id })
-                    win_bet.map(async (e) => {
+                    // const win_bet = await UserChoiceModel.find({ choice: correct_choice._id })
+                    correct_choice.map(async (e) => {
                         await UserModel.updateOne({ "_id": e.user }, { $inc: { "money": (fail_money + success_money - challenger_award) * e.bet_money / success_money } })
                     })
                     break
