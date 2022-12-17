@@ -33,7 +33,9 @@ const ChoiceModel = mongoose.model('Choice', ChoiceSchema);
 /******* UserChoice Schema *******/
 const UserChoiceSchema = new Schema({
     user: { type: mongoose.Types.ObjectId, ref: 'User' },
-    choice: { type: mongoose.Types.ObjectId, ref: 'Choice' },
+    // choice: { type: mongoose.Types.ObjectId, ref: 'Choice' },
+    bet_id: { type: mongoose.Types.ObjectId, ref: 'Bet' },
+    choice: { type: String, required: [true, 'Name field is required.'] },
     bet_money: { type: Number, required: [true, 'Money field is required.'] }
 
 });

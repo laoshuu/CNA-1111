@@ -64,6 +64,7 @@ const MainPage = () => {
     const [form] = Form.useForm()
     return (
         <>
+
             <CardWrapper>
                 {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
                     <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title) }>
@@ -73,6 +74,7 @@ const MainPage = () => {
                 </>))
                 }
             </CardWrapper>
+
 
             <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} title={betTitle}
                 okText='開賭'
