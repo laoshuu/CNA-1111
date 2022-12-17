@@ -24,7 +24,7 @@ export default function Login() {
 
     useEffect(()=>{
         if (login === true) {
-            navigate('/test');
+            navigate('/main');
             // navigate('/chat');
             initChatToBE();
         }

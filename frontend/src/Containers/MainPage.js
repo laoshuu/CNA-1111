@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import FormItem from "antd/es/form/FormItem"
-import { Card } from 'antd';
-import { Col, Row } from 'antd';
-import { Button, Checkbox, Form, Input, Space, Modal } from 'antd';
+
+import { Button, Checkbox, Form, Input, Space, Modal, Card } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import { Radio } from 'antd';
@@ -10,7 +9,8 @@ import { useChat } from '../Hooks/useChat';
 import { useNavigate } from "react-router-dom";
 
 
-const TestPage = () => {
+
+const MainPage = () => {
     const { bet, name, createBet, makeBet } = useChat();
     const [betTitle, setBetTitle] = useState('');
     const [betId, setBetId] = useState('');
@@ -23,6 +23,7 @@ const TestPage = () => {
     useEffect(() => {
         if (tmp === true)
             navigate("/user")
+
     }, [tmp]);
 
     const navigate = useNavigate()
@@ -102,4 +103,5 @@ const TestPage = () => {
         </>
     );
 }
-export default TestPage;
+
+export default MainPage;
