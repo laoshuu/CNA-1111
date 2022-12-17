@@ -35,7 +35,7 @@ const ChatProvider = (props) => {
     const [register, setRegister] = useState(false);
 
     const [bet, setBet] = useState([
-        { title: "去北車吃飯", challenger: "路人甲" }, { title: "搭笑傲飛鷹", challenger: "路人乙" }
+        { title: "去北車吃飯", challenger: "路人甲" }, { title: "搭笑傲飛鷹", challenger: "路人乙" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" }
     ])
 
 
