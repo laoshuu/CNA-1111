@@ -1,6 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { Card } from 'antd';
-import { Col, Row } from 'antd';
 import { Button, Checkbox, Form, Input, Space, Radio, Modal } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
