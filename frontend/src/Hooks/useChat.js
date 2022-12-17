@@ -62,11 +62,11 @@ const ChatProvider = (props) => {
         const { data } = byteString;
         const [task, payload] = JSON.parse(data);
         switch (task) {
-            // case 'INIT': {
-            //     const messages = payload
-            //     setBet(messages)
-            //     break
-            // }
+            case 'INIT': {
+                const messages = payload
+                setBet(messages)
+                break
+            }
             case 'REGISTER': {
                 const is_register = payload;
                 setRegister(is_register);
@@ -76,6 +76,11 @@ const ChatProvider = (props) => {
                 const is_login = payload;
                 setLogin(is_login);
                 break;
+            }
+            case 'NEW_BET': {
+                const new_bet = payload;
+                setBet(...bet, new_bet)
+                break
             }
             case 'users': {
                 const users = payload;
@@ -107,6 +112,7 @@ const ChatProvider = (props) => {
                 break;
             }
             case 'status': {
+                console.log(payload)
                 displayStatus(payload);
                 break;
             }
@@ -135,7 +141,7 @@ const ChatProvider = (props) => {
     // Make Bet - BetName, Username, ChoiceName, BetMoney
     const makeBet = (input_BetName, input_Username, input_ChoiceName, input_BetMoney) => {
         // setName(input_name)
-        sendData(['MAKE_BET', { bet_title: input_BetName, username: input_Username, choice_name: input_ChoiceName, bet_money: input_BetMoney }]);
+        sendData(['MAKE_BET', { bet_id: input_BetName, username: input_Username, choice_name: input_ChoiceName, bet_money: input_BetMoney }]);
     }
 
 

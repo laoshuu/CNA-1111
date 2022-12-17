@@ -52,7 +52,7 @@ const MainPage = () => {
     return (
         <>
             {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
-                <Card title={e.title} bordered={true} style={{ width: 300 }} onClick={() => showModal(e.id, e.title)}>
+                <Card id={e.id} key={e.id} title={e.title} bordered={true} style={{ width: 300 }} onClick={() => showModal(e.id, e.title)}>
                     <p>challenger: {e.challenger}</p>
                 </Card>
             </>))
