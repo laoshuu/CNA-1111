@@ -16,12 +16,11 @@ const CardWrapper = styled.div`
     flex-direction: column;
     width: 100%;
     margin: 100px;
-}
 `
 const StyledCard = styled(Card)`
     width: 95%;
+    lengyh
     margin: 10px
-    
 `;
 const MainPage = () => {
     const { bet, name, createBet, makeBet } = useChat();
