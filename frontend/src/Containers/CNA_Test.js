@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import FormItem from "antd/es/form/FormItem"
 import { Card } from 'antd';
 import { Col, Row } from 'antd';
@@ -7,14 +7,24 @@ import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import { Radio } from 'antd';
 import { useChat } from '../Hooks/useChat';
+import { useNavigate } from "react-router-dom";
+
 
 const TestPage = () => {
     const { bet, name, createBet, makeBet } = useChat();
     const [betTitle, setBetTitle] = useState('');
     const [betId, setBetId] = useState('');
     const [betMoney, setBetMoney] = useState(0);
-    const [choice, setChoice] = useState('Success'); const [isModalOpen, setIsModalOpen] = useState(false);
+    const [choice, setChoice] = useState('Success');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [tmp, setTmp] = useState(false)
+
+    useEffect(() => {
+        navigate("/user")
+    }, [tmp]);
+
+    const navigate = useNavigate()
     const showModal = (id, title) => {
         setIsModalOpen(true);
         setBetId(id);
@@ -29,6 +39,9 @@ const TestPage = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        setBetId('')
+        setBetMoney(0)
+        setBetTitle('')
     };
 
     const bodyRef = useRef(null);
@@ -84,7 +97,7 @@ const TestPage = () => {
 
                 </Form>
             </Modal>
-
+            <Button onClick={() => setTmp(true)} >nooooo</Button>
         </>
     );
 }

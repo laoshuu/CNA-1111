@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Routes, Route, Link } from "react-router-dom";
 import Register from './Register';
 import Login from './Login';
+import UserPage from './UserPage'
 // import MainPage from './MainPage';
 import TestPage from './CNA_Test';
 
@@ -26,6 +27,7 @@ export default function App() {
           <Route index element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="test" element={<TestPage />} />
+          <Route path="user" element={<UserPage />} />
           {/* <Route path="chat" element={<MainPage />} /> */}
           <Route path="*" element={<NoMatch />} />
         </Route>
