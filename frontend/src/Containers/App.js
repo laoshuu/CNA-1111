@@ -5,7 +5,7 @@ import Register from './Register';
 import Login from './Login';
 import UserPage from './UserPage'
 // import MainPage from './MainPage';
-import TestPage from './CNA_Test';
+import TestPage from './MainPage';
 
 const Wrapper = styled.div`
   display: flex;

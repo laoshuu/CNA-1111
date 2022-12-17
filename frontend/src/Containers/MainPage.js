@@ -21,7 +21,8 @@ const TestPage = () => {
     const [tmp, setTmp] = useState(false)
 
     useEffect(() => {
-        navigate("/user")
+        if (tmp === true)
+            navigate("/user")
     }, [tmp]);
 
     const navigate = useNavigate()
