@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import FormItem from "antd/es/form/FormItem"
+
 import { Button, Checkbox, Form, Input, Space, Modal, Card } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import { Radio } from 'antd';
 import { useChat } from '../Hooks/useChat';
 import { useNavigate } from "react-router-dom";
+
 
 
 const MainPage = () => {
@@ -19,6 +21,7 @@ const MainPage = () => {
     const [tmp, setTmp] = useState(false)
 
     useEffect(() => {
+
         if (tmp) {
             navigate("/user")
         }
@@ -101,4 +104,5 @@ const MainPage = () => {
         </>
     );
 }
+
 export default MainPage;

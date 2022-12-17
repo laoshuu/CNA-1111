@@ -4,7 +4,6 @@ import { Routes, Route, Link } from "react-router-dom";
 import Register from './Register';
 import Login from './Login';
 import UserPage from './UserPage'
-// import MainPage from './MainPage';
 import MainPage from './MainPage';
 
 const Wrapper = styled.div`
