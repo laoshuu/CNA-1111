@@ -64,6 +64,7 @@ export default {
                 case 'LOGIN': {
                     const { name, password } = payload;
                     const user = await UserModel.findOne({ name: name })
+
                     if (!user)
                         sendData(["status", { type: "error", msg: "Username does not exist" }], ws)
                     else {
@@ -84,6 +85,7 @@ export default {
                             sendData(["INIT", messages], ws)
                         }
                     }
+
                     break
                 }
                 case 'END_BET': {
