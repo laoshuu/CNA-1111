@@ -3,8 +3,6 @@ import { Button, Checkbox, Form, Input, Space, Modal } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import FormItem from "antd/es/form/FormItem"
 
-import { useChat } from '../Hooks/useChat';
-
 const CreateBetModal = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm()
     return (
