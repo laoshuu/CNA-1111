@@ -3,7 +3,7 @@ import FormItem from "antd/es/form/FormItem"
 
 import { Divider, Typography } from 'antd';
 
-import { UserOutlined, HomeOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Space, Modal, Card, Menu, Tabs } from 'antd';
 // import { SmileOutlined, User } from '@ant-design/icons';
 import UserPage from './UserPage';
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 
 const { Title, Paragraph, Text, Link } = Typography;
+
 const CardWrapper = styled.div`
     display: flex;
     overflow: auto;
@@ -33,7 +34,7 @@ const StyledCard = styled(Card)`
 
 const StyledBotton = styled(Button)`
     width: 40%;
-    height: 10%;
+    height: 7%;
     margin: 10px
 `;
 
@@ -94,7 +95,6 @@ const MainPage = () => {
             {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} /> */}
             {/* <StyledMenu> */}
                 <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
-                <StyledBotton icon={<HomeOutlined />} onClick={() => setTmp(true)} > Back to home page </StyledBotton>
             {/* </StyledMenu> */}
 
             <CardWrapper>
@@ -143,10 +143,7 @@ const MainPage = () => {
                             <Radio.Button value="Success"> 他敢 </Radio.Button>
                             <Radio.Button value="Fail"> 俗辣啦他不敢 </Radio.Button>
                         </Radio.Group>
-
-
                     </FormItem>
-
                 </Form>
             </Modal>
         </>

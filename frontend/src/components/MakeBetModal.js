@@ -43,7 +43,7 @@ const MakeBetModal = ({ open, onCreate, onCancel }) => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please enter the name of the person to chat!'
+                            message: 'Please enter your bet money!'
                         }
                     ]}
                 >
@@ -68,31 +68,6 @@ const MakeBetModal = ({ open, onCreate, onCancel }) => {
             </Form>
 
         </Modal>
-        // <Card style={{ width: '100%', textAlign: 'center' }}>
-        // <Row gutter={40}>
-        //     <Col>
-        //     <h3>Make A Bet</h3>
-        //     <br />
-        //     <Radio.Group onChange={(e) => { setChoice(e.target.value) }} defaultValue="Success">
-        //         <Radio.Button value="Success"> 他敢 </Radio.Button>
-        //         <Radio.Button value="Fail"> 俗辣啦他不敢 </Radio.Button>
-        //     </Radio.Group>
-        //     <br />
-        //     <br />
-        //     <Input.Search
-        //         ref={bodyRef}
-        //         // Save and store the textBody
-        //         value={betMoney}
-        //         onChange={(e) => setBetTitle(e.target.value)}
-        //         enterButton="Make Bet"
-        //         placeholder="Enter your bet money..."
-        //         onSearch={() => {
-        //             makeBet(betTitle, name, choice, betMoney) // 這裡不知道行不行直接存這個 title value
-        //         }}
-        //     ></Input.Search>
-        //     </Col>
-        // </Row>
-        // </Card>
     );
 }
 export default MakeBetModal;
