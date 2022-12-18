@@ -5,6 +5,7 @@ import Register from './Register';
 import Login from './Login';
 import UserPage from './UserPage'
 import MainPage from './MainPage';
+import MailPage from './MailPage';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,12 +23,11 @@ export default function App() {
     <Wrapper>
       <Routes>
         <Route>
-          {/* <Route index element={<TestPage />} /> */}
           <Route index element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="main" element={<MainPage />} />
           <Route path="user" element={<UserPage />} />
-          {/* <Route path="chat" element={<MainPage />} /> */}
+          <Route path="mail" element={<MailPage />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>

@@ -28,13 +28,12 @@ const CardWrapper = styled.div`
 
 const StyledCard = styled(Card)`
     width: 95%;
-    lengyh
     margin: 10px
 `;
 
 const StyledBotton = styled(Button)`
     width: 40%;
-    height: 7%;
+    height: 5%;
     margin: 10px
 `;
 

@@ -23,21 +23,34 @@ const ChatContext = createContext({
 })
 
 const ChatProvider = (props) => {
+    const [login, setLogin] = useState(false);
+    const [register, setRegister] = useState(false);
+
     const [user, setUser] = useState({});
-    const [name, setName] = useState('');
+    // const [name, setName] = useState('');
+    const [name, setName] = useState('路人甲');
     const [money, setMoney] = useState(0);
 
     const [friends, setFriends] = useState([]);
     const [newChatRoom, setNewChatRoom] = useState({});
     const [messages, setMessages] = useState([]);
     const [initChatRooms, setInitChatRooms] = useState([]);
-    const [login, setLogin] = useState(false);
-    const [register, setRegister] = useState(false);
 
     const [bet, setBet] = useState([
-        { title: "去北車吃飯", challenger: "路人甲" }, { title: "搭笑傲飛鷹", challenger: "路人乙" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" },{ title: "去北車吃飯", challenger: "路人甲" }
-    ])
+        { title: "去北車吃飯", challenger: "路人甲" }, 
+        { title: "搭笑傲飛鷹", challenger: "路人乙" }, 
+        { title: "搭笑傲飛鷹", challenger: "路人乙" }, 
+        { title: "去北車吃飯", challenger: "路人甲" }, 
+        { title: "去北車吃飯", challenger: "路人甲" },
+    ]);
 
+    const [mail, setMail] = useState([
+        { title: "去北車吃飯", challenger: "路人甲", money_change: 20 }, 
+        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: 60 }, 
+        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: -20 }, 
+        { title: "去北車吃飯", challenger: "路人甲", money_change: -30 }, 
+        { title: "去北車吃飯", challenger: "路人甲", money_change: 50 },
+    ]);
 
     const displayStatus = (input_status) => {
         if (input_status.msg) {
