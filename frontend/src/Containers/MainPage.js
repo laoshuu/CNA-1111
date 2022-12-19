@@ -13,6 +13,7 @@ import { useChat } from '../Hooks/useChat';
 import { useNavigate } from "react-router-dom";
 
 import styled from 'styled-components';
+import CompoundedSpace from 'antd/es/space';
 
 const { Title, Paragraph, Text, Link } = Typography;
 
@@ -23,6 +24,7 @@ const CardWrapper = styled.div`
     width: 100%;
     margin-bottom: 100px;
     margin-top: 10px;
+    align-items: center;
 `;
 
 const StyledCard = styled(Card)`
@@ -85,7 +87,7 @@ const MainPage = () => {
     //     console.log('click ', e);
     //     setCurrent(e.key);
     // };
-
+    
     return (
         <>
             <Title> All Bets Page </Title>
@@ -93,15 +95,16 @@ const MainPage = () => {
             {/* <StyledMenu> */}
             <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
             {/* </StyledMenu> */}
-
+            
             <CardWrapper>
-                {allBets.map((e) => (e.challenger === name) ? (<></>) : (<>
+                {
+                allBets.map((e) => (e.challenger === name) ? (<></>) : (<>
                     <StyledCard title={e.title} bordered={true} hoverable onClick={() => showModal(e.id, e.title)}>
                         <p>challenger: {e.challenger}</p>
                     </StyledCard>
-
                 </>))
                 }
+                {/* <p style={{ color: '#ccc' }}> No bet is avalible now...</p> */}
             </CardWrapper>
 
 

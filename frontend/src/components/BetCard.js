@@ -57,18 +57,8 @@ const BetCard = ({ betTitle, challenger, betType, betID }) => {
             </>
         );
     }
-    else if (betType === 'Make') {
-        return (
-            <StyledCard
-                hoverable
-                title={betTitle}
-                bordered={true}
-                onClick={() => { console.log("hello") }}
-
-            >
-                <p>challenger: {challenger}</p>
-            </StyledCard>
-        );
+    else {
+        return;
     }
 };
 
