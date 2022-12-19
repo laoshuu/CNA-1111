@@ -131,7 +131,7 @@ const UserPage = () => {
             children: displayList(makedBets, "Make"),
             key: "Make"
         });
-    }, [allBets]);
+    }, [allBets, makedBets]);
 
     // Create Mail Drawer
     const [isMailOpen, setIsMailOpen] = useState(false);
@@ -184,7 +184,7 @@ const UserPage = () => {
             <CreateBetModal
                 open={isModalOpen}
                 onCreate={({ name }) => Modal_on_create(name)}
-                onCancel={() => {Modal_on_cancel()}}
+                onCancel={() => { Modal_on_cancel() }}
             />
             <Drawer title={`${name}'s Mail Box`} placement="right" onClose={CloseDrawer} open={isMailOpen}>
                 <List
