@@ -47,11 +47,13 @@ const ChatProvider = (props) => {
         // { title: "去北車吃飯", challenger: "路人甲" },
     ]);
 
-    const [makedBets, setMakedBets] = useState([])
+    // betID, betTitle, challenger, betMoney, choice
+    // variable name: id, title, challenger, money, choice
+    const [madeBets, setMadeBets] = useState([])
 
     useEffect(() => {
-        console.log(makedBets)
-    }, [makedBets])
+        console.log(madeBets)
+    }, [madeBets])
 
     const [mail, setMail] = useState([
         { title: "去北車吃飯", challenger: "路人甲", money_change: 20 },
@@ -88,10 +90,10 @@ const ChatProvider = (props) => {
         const [task, payload] = JSON.parse(data);
         switch (task) {
             case 'INIT': {
-                const [messages, maked_messages] = payload
+                const [messages, made_messages] = payload
                 // setMoney(money)
                 setAllBets(messages)
-                setMakedBets(maked_messages)
+                setMadeBets(made_messages)
                 break
             }
             case 'REGISTER': {
@@ -116,8 +118,8 @@ const ChatProvider = (props) => {
                 break
             }
             case 'MAKE_BET': {
-                const maked_messages = payload
-                setMakedBets([...makedBets, maked_messages])
+                const made_messages = payload
+                setMadeBets([...madeBets, made_messages])
                 break
             }
             case 'users': {
@@ -206,7 +208,7 @@ const ChatProvider = (props) => {
             messages,
             initChatRooms,
             allBets,
-            makedBets,
+            madeBets,
             money,
             result,
 

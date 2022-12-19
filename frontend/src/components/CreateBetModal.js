@@ -3,6 +3,7 @@ import { Button, Checkbox, Form, Input, Space, Modal } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
 import FormItem from "antd/es/form/FormItem"
 
+// Don't remove files directly !!
 const CreateBetModal = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm()
     return (
