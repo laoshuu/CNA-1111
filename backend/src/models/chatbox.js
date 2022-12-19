@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     name: { type: String, required: [true, 'Name field is required.'] },
     password: { type: String, required: [true, 'Password field is required.'] },
     money: { type: Number, required: [true, 'Money field is required.'] },
-    mailbox: { type: [{ type: mongoose.Types.ObjectId, ref: 'Mail' }] }
+    mailbox: [{ type: mongoose.Types.ObjectId, ref: 'Mail' }]
 });
 
 const UserModel = mongoose.model('User', UserSchema);
@@ -45,7 +45,8 @@ const UserChoiceModel = mongoose.model('UserChoice', UserChoiceSchema);
 
 /******* Mail Schema *******/
 const MailSchema = new Schema({
-    bet: { type: mongoose.Types.ObjectId, ref: 'Bet' },
+    bet_title: { type: String, required: [true, 'Bet title field is required.'] },
+    bet_challenger: { type: String, required: [true, 'Bet challenger field is required.'] },
     result: { type: String, required: [true, 'Result field is required.'] },
     spent: { type: Number, required: [true, 'Money field is required.'] },
     earn: { type: Number, required: [true, 'Money field is required.'] },
