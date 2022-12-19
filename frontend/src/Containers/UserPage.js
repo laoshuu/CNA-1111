@@ -52,7 +52,7 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 const UserPage = () => {
-    const { name, money, bet, mail, createBet } = useChat();
+    const { name, money, allBets, makedBets, mail, createBet } = useChat();
     const [tasks, setTasks] = useState(["12233", "PK", "LAUSHU"]);
     const [filter, setFilter] = useState('All');
     const [createBetBox, setCreateBetBox] = useState([]);
@@ -123,15 +123,15 @@ const UserPage = () => {
     useEffect(() => {
         setCreateBetBox({
             label: "The Bet You Create",
-            children: displayList(bet, "Create"),
+            children: displayList(allBets, "Create"),
             key: "Create"
         });
         setMakeBetBox({
             label: "The Bet You Make",
-            children: displayList(bet, "Make"),
+            children: displayList(makedBets, "Make"),
             key: "Make"
         });
-    }, [bet]);
+    }, [allBets]);
 
     // Create Mail Drawer
     const [isMailOpen, setIsMailOpen] = useState(false);
