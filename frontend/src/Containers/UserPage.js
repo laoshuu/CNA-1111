@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Divider, Typography } from 'antd';
-import { HomeOutlined, PlusOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Statistic, Tabs, Drawer, List } from 'antd';
+import { HomeOutlined, PlusOutlined, MailOutlined, TransactionOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Statistic, Tabs, Drawer, List, Avatar } from 'antd';
 import { useChat } from "../Hooks/useChat";
 import styled from "styled-components";
 
@@ -35,6 +35,10 @@ const BetBoxWrapper = styled.div`
     overflow: auto;
 `
 
+const TitleStyled = styled(Title)`
+    align-itself: top;
+`
+
 function usePrevious(value) {
     const ref = useRef();
     useEffect(() => {
@@ -52,7 +56,7 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 const UserPage = () => {
-    const { name, money, allBets, makedBets, mail, createBet } = useChat();
+    const { name, money, allBets, madeBets, mail, createBet } = useChat();
     const [tasks, setTasks] = useState(["12233", "PK", "LAUSHU"]);
     const [filter, setFilter] = useState('All');
     const [createBetBox, setCreateBetBox] = useState([]);
@@ -94,6 +98,7 @@ const UserPage = () => {
 
     // 產生 Bet List 的 DOM nodes
     const displayList = (betList, CreateOrMake) => {
+        // console.log("betList:", betList)
         return (
             betList.length === 0 ? (
                 <p style={{ color: '#ccc' }}> No bet... </p>
@@ -121,6 +126,8 @@ const UserPage = () => {
 
     // Generate the content of Tabs (CreateBet, MakeBet)
     useEffect(() => {
+        // console.log('allBets', allBets)
+        // console.log('madeBets', madeBets)
         setCreateBetBox({
             label: "The Bet You Create",
             children: displayList(allBets, "Create"),
@@ -128,7 +135,7 @@ const UserPage = () => {
         });
         setMakeBetBox({
             label: "The Bet You Make",
-            children: displayList(makedBets, "Make"),
+            children: displayList(madeBets, "Make"),
             key: "Make"
         });
     }, [allBets]);
@@ -144,6 +151,7 @@ const UserPage = () => {
     const CreateMailMessage = () => {
 
     }
+    const AllMail = ['aaa', 'bbb', 'ccc']
 
     return (
         <>
@@ -154,6 +162,7 @@ const UserPage = () => {
                 <StyledBotton icon={<MailOutlined />} onClick={() => {
                     CreateMailMessage();
                     ShowDrawer()
+                    console.log('mail', mail)
                 }} > Open your mail box
                 </StyledBotton>
             </div>
@@ -175,26 +184,35 @@ const UserPage = () => {
                 activeKey={activeKey}
                 items={[createBetBox, makeBetBox]}
             />
-            {/* <div>
-                {filterList}
-                {taskList}
-            </div> */}
-            {/* <Title level={2}> 開局 </Title>
-            <Form addTask={addTask} /> */}
             <CreateBetModal
                 open={isModalOpen}
                 onCreate={({ name }) => Modal_on_create(name)}
-                onCancel={() => {Modal_on_cancel()}}
+                onCancel={() => { Modal_on_cancel() }}
             />
             <Drawer title={`${name}'s Mail Box`} placement="right" onClose={CloseDrawer} open={isMailOpen}>
                 <List
-                    header={<div>Money Change</div>}
+                    header={<div> Money Change </div>}
                     // footer={<div>Footer</div>}
                     bordered
                     dataSource={mail}
                     renderItem={(item) => (
                         <List.Item>
-                            <Typography.Text mark>[ITEM]</Typography.Text> {item}
+                            {/* <List.Item.Meta 
+                                avatar={<Avatar style={{}} icon={<TransactionOutlined />} />}
+                                title={<TitleStyled level={5} > {item.title} </TitleStyled>}
+                                description={<p> challenger: {item.challenger} </p>}
+                            />
+                            <div> {item.money_change} </div> */}
+                            <div style={{alignSelf}}>
+                                <div>
+                                    <TransactionOutlined />
+                                </div>
+                                <div>
+                                    <div strong> {item.title} </div>
+                                    <div> challenger: {item.challenger} </div>
+                                </div>
+                                <div>{item.money_change}</div>
+                            </div>
                         </List.Item>
                     )}
                 />
