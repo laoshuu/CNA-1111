@@ -52,11 +52,17 @@ const MainPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tmp, setTmp] = useState(false)
 
+
     useEffect(() => {
         if (tmp) {
             navigate("/user")
         }
     }, [tmp]);
+
+    useEffect(() => {
+        if (name === '')
+            navigate("error")
+    }, [name])
 
     const navigate = useNavigate()
     const showModal = (id, title) => {
@@ -87,7 +93,7 @@ const MainPage = () => {
     //     console.log('click ', e);
     //     setCurrent(e.key);
     // };
-    
+
     return (
         <>
             <Title> All Bets Page </Title>
@@ -95,14 +101,14 @@ const MainPage = () => {
             {/* <StyledMenu> */}
             <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
             {/* </StyledMenu> */}
-            
+
             <CardWrapper>
                 {
-                allBets.map((e) => (e.challenger === name) ? (<></>) : (<>
-                    <StyledCard title={e.title} bordered={true} hoverable onClick={() => showModal(e.id, e.title)}>
-                        <p>challenger: {e.challenger}</p>
-                    </StyledCard>
-                </>))
+                    allBets.map((e) => (e.challenger === name) ? (<></>) : (<>
+                        <StyledCard title={e.title} bordered={true} hoverable onClick={() => showModal(e.id, e.title)}>
+                            <p>challenger: {e.challenger}</p>
+                        </StyledCard>
+                    </>))
                 }
                 {/* <p style={{ color: '#ccc' }}> No bet is avalible now...</p> */}
             </CardWrapper>
