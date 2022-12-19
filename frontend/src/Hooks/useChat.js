@@ -19,6 +19,7 @@ const ChatContext = createContext({
     loginToBE: () => { },
     createBet: () => { },
     makeBet: () => { },
+    endBet: () => { },
     createChatToBE: () => { },
     initChatToBE: () => { },
     inputToBE: () => { },
@@ -184,6 +185,11 @@ const ChatProvider = (props) => {
         // setName(input_name)
         sendData(['MAKE_BET', { bet_id: input_BetName, username: input_Username, choice_name: input_ChoiceName, bet_money: input_BetMoney }]);
     }
+    // End Bet - BetName, Username, ChoiceName, BetMoney
+    const endBet = (input_betID, input_ChoiceName) => {
+        // setName(input_name)
+        sendData(['END_BET', { bet_id: input_betID, result: input_ChoiceName }]);
+    }
 
 
     const createChatToBE = (friend_names) => {
@@ -219,6 +225,7 @@ const ChatProvider = (props) => {
             loginToBE,
             createBet,
             makeBet,
+            endBet,
             createChatToBE,
             initChatToBE,
             inputToBE,

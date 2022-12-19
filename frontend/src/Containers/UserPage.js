@@ -170,7 +170,7 @@ const UserPage = () => {
             children: displayListMakeBet(madeBets, "Make"),
             key: "Make"
         });
-    }, [allBets]);
+    }, [allBets, makedBets]);
 
     // Create Mail Drawer
     const [isMailOpen, setIsMailOpen] = useState(false);
