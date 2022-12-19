@@ -39,13 +39,19 @@ const ChatProvider = (props) => {
     const [messages, setMessages] = useState([]);
     const [initChatRooms, setInitChatRooms] = useState([]);
 
-    const [bet, setBet] = useState([
+    const [allBets, setAllBets] = useState([
         // { title: "去北車吃飯", challenger: "路人甲" },
         // { title: "搭笑傲飛鷹", challenger: "路人乙" },
         // { title: "搭笑傲飛鷹", challenger: "路人乙" },
         // { title: "去北車吃飯", challenger: "路人甲" },
         // { title: "去北車吃飯", challenger: "路人甲" },
     ]);
+
+    const [makedBets, setMakedBets] = useState([])
+
+    useEffect(() => {
+        console.log(makedBets)
+    }, [makedBets])
 
     const [mail, setMail] = useState([
         { title: "去北車吃飯", challenger: "路人甲", money_change: 20 },
@@ -82,9 +88,10 @@ const ChatProvider = (props) => {
         const [task, payload] = JSON.parse(data);
         switch (task) {
             case 'INIT': {
-                const messages = payload
+                const [messages, maked_messages] = payload
                 // setMoney(money)
-                setBet(messages)
+                setAllBets(messages)
+                setMakedBets(maked_messages)
                 break
             }
             case 'REGISTER': {
@@ -100,12 +107,17 @@ const ChatProvider = (props) => {
             case 'NEW_BET': {
                 const new_bet = payload;
                 console.log(payload)
-                setBet([...bet, new_bet])
+                setAllBets([...allBets, new_bet])
                 break
             }
             case 'MONEY': {
                 const money = payload
                 setMoney(money)
+                break
+            }
+            case 'MAKE_BET': {
+                const maked_messages = payload
+                setMakedBets([...makedBets, maked_messages])
                 break
             }
             case 'users': {
@@ -193,7 +205,8 @@ const ChatProvider = (props) => {
             newChatRoom,
             messages,
             initChatRooms,
-            bet,
+            allBets,
+            makedBets,
             money,
             result,
 

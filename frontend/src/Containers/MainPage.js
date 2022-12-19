@@ -42,7 +42,7 @@ const StyledMenu = styled.div`
 `;
 
 const MainPage = () => {
-    const { bet, name, createBet, makeBet } = useChat();
+    const { allBets, name, createBet, makeBet } = useChat();
     const [betTitle, setBetTitle] = useState('');
     const [betId, setBetId] = useState('');
     const [betMoney, setBetMoney] = useState(0);
@@ -95,13 +95,8 @@ const MainPage = () => {
             {/* </StyledMenu> */}
 
             <CardWrapper>
-                {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
-                    <StyledCard 
-                        title={e.title} 
-                        bordered={true} 
-                        hoverable
-                        onClick={() => showModal(e.id, e.title)}
-                    >
+                {allBets.map((e) => (e.challenger === name) ? (<></>) : (<>
+                    <StyledCard title={e.title} bordered={true} hoverable onClick={() => showModal(e.id, e.title)}>
                         <p>challenger: {e.challenger}</p>
                     </StyledCard>
 

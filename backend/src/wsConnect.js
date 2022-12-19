@@ -43,7 +43,6 @@ export default {
                 case 'MAKE_BET': {
                     const { bet_id, username, choice_name, bet_money } = payload;
                     const user = await UserModel.findOne({ name: username })
-                    // const choice = await ChoiceModel.findOne({ bet_id: bet_id, name: choice_name })
                     // check enough money
                     if (user.money < bet_money)
                         sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
@@ -51,6 +50,12 @@ export default {
                         await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -bet_money } })
                         const newBet = new UserChoiceModel({ user: user._id, bet_id: bet_id, choice: choice_name, bet_money: bet_money })
                         newBet.save()
+                        const Bet = await BetModel.findOne({ _id: bet_id }).populate("challenger").then((res) => {
+                            const maked_messages = { id: bet_id, title: res.title, challenger: res.challenger.name, money: bet_money, choice: choice_name }
+                            sendData(["MAKE_BET", maked_messages], ws)
+                        })
+                        sendData(["status", { type: "info", msg: `$${bet_money} dollar spent` }], ws)
+                        sendData(["MONEY", user.money - bet_money], ws)
                     }
                     break
                 }
@@ -86,11 +91,18 @@ export default {
 
                             const messages = []
                             await BetModel.find().populate("challenger").then((res) => {
-                                console.log(res)
+                                // console.log(res)
                                 res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
                             });
+
+                            const maked_messages = []
+                            await UserChoiceModel.find({ user: user._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                                console.log(res)
+                                res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
+                            })
+
                             sendData(["MONEY", user.money], ws)
-                            sendData(["INIT", messages], ws)
+                            sendData(["INIT", [messages, maked_messages]], ws)
                         }
                     }
 
