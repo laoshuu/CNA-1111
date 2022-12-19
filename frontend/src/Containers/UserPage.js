@@ -167,7 +167,7 @@ const UserPage = () => {
         });
         setMakeBetBox({
             label: "The Bet You Make",
-            children: displayListMakeBet(makedBets, "Make"),
+            children: displayListMakeBet(madeBets, "Make"),
             key: "Make"
         });
     }, [allBets]);
@@ -236,7 +236,7 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
-                            <div style={{alignSelf}}>
+                            <div>
                                 <div>
                                     <TransactionOutlined />
                                 </div>
