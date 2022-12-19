@@ -4,12 +4,11 @@ import FormItem from "antd/es/form/FormItem"
 import { Divider, Typography } from 'antd';
 
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Space, Modal, Card, Menu, Tabs } from 'antd';
+import { Button, Checkbox, Form, Input, Space, Modal, Card, Menu, Tabs, Radio } from 'antd';
 // import { SmileOutlined, User } from '@ant-design/icons';
 import UserPage from './UserPage';
 import type { RadioChangeEvent } from 'antd';
 import type { SpaceSize } from 'antd/es/space';
-import { Radio } from 'antd';
 import { useChat } from '../Hooks/useChat';
 import { useNavigate } from "react-router-dom";
 
@@ -97,7 +96,12 @@ const MainPage = () => {
 
             <CardWrapper>
                 {bet.map((e) => (e.challenger === name) ? (<></>) : (<>
-                    <StyledCard title={e.title} bordered={true} onClick={() => showModal(e.id, e.title)}>
+                    <StyledCard 
+                        title={e.title} 
+                        bordered={true} 
+                        hoverable
+                        onClick={() => showModal(e.id, e.title)}
+                    >
                         <p>challenger: {e.challenger}</p>
                     </StyledCard>
 

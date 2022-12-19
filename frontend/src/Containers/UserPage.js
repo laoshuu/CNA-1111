@@ -100,14 +100,14 @@ const UserPage = () => {
             ) : (
                 <BetBoxWrapper>
                     {
-                        betList.map(({ title, challenger }, i) => {
+                        betList.map(({ id, title, challenger }, i) => {
                             if (CreateOrMake === 'Create' && challenger === name) {
                                 // console.log("filter create:", CreateOrMake)
-                                return (<BetCard betTitle={title} challenger={challenger} key={i} />)
+                                return (<BetCard betTitle={title} challenger={challenger} betType={CreateOrMake} betID={id} key={i} />)
                             }
                             else if (CreateOrMake === 'Make' && challenger !== name) {
                                 // console.log("filter make")
-                                return (<BetCard betTitle={title} challenger={challenger} key={i} />)
+                                return (<BetCard betTitle={title} challenger={challenger} betType={CreateOrMake} betID={id} key={i} />)
                             }
                             else {
                                 return
@@ -184,7 +184,7 @@ const UserPage = () => {
             <CreateBetModal
                 open={isModalOpen}
                 onCreate={({ name }) => Modal_on_create(name)}
-                onCancel={Modal_on_cancel}
+                onCancel={() => {Modal_on_cancel()}}
             />
             <Drawer title={`${name}'s Mail Box`} placement="right" onClose={CloseDrawer} open={isMailOpen}>
                 <List
