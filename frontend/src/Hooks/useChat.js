@@ -90,10 +90,10 @@ const ChatProvider = (props) => {
         const [task, payload] = JSON.parse(data);
         switch (task) {
             case 'INIT': {
-                const [messages, maked_messages] = payload
+                const [messages, made_messages] = payload
                 // setMoney(money)
                 setAllBets(messages)
-                setMadeBets(maked_messages)
+                setMadeBets(made_messages)
                 break
             }
             case 'REGISTER': {
