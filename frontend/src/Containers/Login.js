@@ -51,9 +51,10 @@ export default function Login() {
         <Card style={{ width: '70%', textAlign: 'center' }}>
             <Row>
                 <Col span={24}>
-                    <Title>My Chat Room</Title>
+                    <Title>Make a bet!</Title>
                     <Title level={4} style={{ color: 'gray' }}>
-                        Log in to join your chat rooms with your friends.
+                        <p>有錢不賭，對不起父母</p>
+                        <p>登入帳號，立即加入賭局！</p>
                     </Title>
                     <Form
                         form={form}
