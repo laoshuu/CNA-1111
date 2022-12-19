@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext, useEffect } from "react";
 import { client } from "../utils";
 import { message as antdmsg } from "antd";
 
@@ -28,7 +28,7 @@ const ChatProvider = (props) => {
 
     const [user, setUser] = useState({});
     // const [name, setName] = useState('');
-    const [name, setName] = useState('路人甲');
+    const [name, setName] = useState('');
     const [money, setMoney] = useState(0);
 
     const [friends, setFriends] = useState([]);
@@ -37,18 +37,18 @@ const ChatProvider = (props) => {
     const [initChatRooms, setInitChatRooms] = useState([]);
 
     const [bet, setBet] = useState([
-        { title: "去北車吃飯", challenger: "路人甲" }, 
-        { title: "搭笑傲飛鷹", challenger: "路人乙" }, 
-        { title: "搭笑傲飛鷹", challenger: "路人乙" }, 
-        { title: "去北車吃飯", challenger: "路人甲" }, 
-        { title: "去北車吃飯", challenger: "路人甲" },
+        // { title: "去北車吃飯", challenger: "路人甲" },
+        // { title: "搭笑傲飛鷹", challenger: "路人乙" },
+        // { title: "搭笑傲飛鷹", challenger: "路人乙" },
+        // { title: "去北車吃飯", challenger: "路人甲" },
+        // { title: "去北車吃飯", challenger: "路人甲" },
     ]);
 
     const [mail, setMail] = useState([
-        { title: "去北車吃飯", challenger: "路人甲", money_change: 20 }, 
-        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: 60 }, 
-        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: -20 }, 
-        { title: "去北車吃飯", challenger: "路人甲", money_change: -30 }, 
+        { title: "去北車吃飯", challenger: "路人甲", money_change: 20 },
+        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: 60 },
+        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: -20 },
+        { title: "去北車吃飯", challenger: "路人甲", money_change: -30 },
         { title: "去北車吃飯", challenger: "路人甲", money_change: 50 },
     ]);
 
@@ -80,6 +80,7 @@ const ChatProvider = (props) => {
         switch (task) {
             case 'INIT': {
                 const messages = payload
+                // setMoney(money)
                 setBet(messages)
                 break
             }
@@ -95,7 +96,13 @@ const ChatProvider = (props) => {
             }
             case 'NEW_BET': {
                 const new_bet = payload;
-                setBet(...bet, new_bet)
+                console.log(payload)
+                setBet([...bet, new_bet])
+                break
+            }
+            case 'MONEY': {
+                const money = payload
+                setMoney(money)
                 break
             }
             case 'users': {
@@ -184,6 +191,7 @@ const ChatProvider = (props) => {
             messages,
             initChatRooms,
             bet,
+            money,
 
             setName,
             registerToBE,

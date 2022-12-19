@@ -16,7 +16,7 @@ const CreateBetModal = ({ open, onCreate, onCancel }) => {
                     window.alert(err)
                 })
             }}
-            onCancel={onCancel} 
+            onCancel={onCancel}
             title="Create your Bet"
             okText='建立賭注挑戰'
             cancelText='下次再來'
@@ -36,7 +36,7 @@ const CreateBetModal = ({ open, onCreate, onCancel }) => {
                         }
                     ]}
                 >
-                <Input />
+                    <Input />
                 </FormItem>
             </Form>
         </Modal>

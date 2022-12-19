@@ -52,12 +52,13 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 const UserPage = () => {
-    const { name, money, bet, mail } = useChat();
+    const { name, money, bet, mail, createBet } = useChat();
     const [tasks, setTasks] = useState(["12233", "PK", "LAUSHU"]);
     const [filter, setFilter] = useState('All');
     const [createBetBox, setCreateBetBox] = useState([]);
     const [makeBetBox, setMakeBetBox] = useState([]);
     const [activeKey, setActiveKey] = useState("Create"); // 目前被點選的 Bet List
+    const [title, setTitle] = useState("")
 
     const navigate = useNavigate()
     const [BackToMain, setBackToMain] = useState(false)
@@ -80,9 +81,11 @@ const UserPage = () => {
     const showCreateBet = () => {
         setIsModalOpen(true);
     };
-    const Modal_on_create = (friendName) => {
-        // Already exist 
+    const Modal_on_create = (title) => {
+        // Already exist
         // send message to backend
+        createBet(title, name)
+        setIsModalOpen(false)
     }
 
     const Modal_on_cancel = () => {
@@ -180,7 +183,7 @@ const UserPage = () => {
             <Form addTask={addTask} /> */}
             <CreateBetModal
                 open={isModalOpen}
-                onCreate={({ name }) => { Modal_on_create(name) }}
+                onCreate={({ name }) => Modal_on_create(name)}
                 onCancel={Modal_on_cancel}
             />
             <Drawer title={`${name}'s Mail Box`} placement="right" onClose={CloseDrawer} open={isMailOpen}>

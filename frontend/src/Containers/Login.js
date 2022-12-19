@@ -15,27 +15,27 @@ const StyledFormItem = styled(Form.Item)`
 `
 
 const { Title, Text } = Typography;
-const LOCALSTORAGE_KEY = "save-user";  
+const LOCALSTORAGE_KEY = "save-user";
 export default function Login() {
     const saveUser = localStorage.getItem(LOCALSTORAGE_KEY)
-    const [ form ] = Form.useForm();
+    const [form] = Form.useForm();
     const { name, setName, login, loginToBE, initChatToBE } = useChat();
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
         if (login === true) {
             navigate('/main');
             // navigate('/chat');
-            initChatToBE();
+            // initChatToBE();
         }
     }, [login])
-    
+
     useEffect(() => {
         console.log("login:" + login)
         try {
-          localStorage.setItem(LOCALSTORAGE_KEY, name);
+            localStorage.setItem(LOCALSTORAGE_KEY, name);
         } catch (err) {
-          setName("" || saveUser)  // 將username更新為上次登錄者
+            setName("" || saveUser)  // 將username更新為上次登錄者
         }
     }, [])
 
@@ -73,8 +73,8 @@ export default function Login() {
                                 },
                             ]}
                         >
-                            <Input 
-                                prefix={<UserOutlined/>} 
+                            <Input
+                                prefix={<UserOutlined />}
                                 placeholder="Username"
                             />
                         </StyledFormItem>
@@ -89,14 +89,14 @@ export default function Login() {
                             ]}
                         >
                             <Input
-                                prefix={<LockOutlined/>}
+                                prefix={<LockOutlined />}
                                 type="password"
                                 placeholder="Password"
                             />
                         </StyledFormItem>
                         <StyledFormItem>
-                            <Button 
-                                type="primary" 
+                            <Button
+                                type="primary"
                                 style={{ width: "100%" }}
                                 htmlType="submit"
                             >
@@ -105,7 +105,7 @@ export default function Login() {
                         </StyledFormItem>
                     </Form>
                     <Text style={{ color: 'gray' }}>
-                        Don't have an account? 
+                        Don't have an account?
                         <Link to="/register"> Sign up</Link>
                     </Text>
                 </Col>

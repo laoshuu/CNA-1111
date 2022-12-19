@@ -21,15 +21,23 @@ export default {
                 case 'CREATE_BET': {
                     const { title, user_name } = payload;
                     const user = await UserModel.findOne({ name: user_name })
-                    const Bet = new BetModel({ title: title, challenger: user.id })
-                    await Bet.save()
-                    broadcastMessage(
-                        wss,
-                        ['NEW_BET', [{ id: Bet._id, title: title, challenger: user._id }]],
-                        {
-                            type: 'success',
-                            msg: `New bet created by ${user.name}!`
-                        })
+                    if (user.money < 50)
+                        sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
+                    else {
+                        await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -1 } })
+                        const Bet = new BetModel({ title: title, challenger: user._id })
+                        await Bet.save()
+
+                        sendData(["status", { type: "info", msg: "$1 dollar spent" }], ws)
+                        sendData(["MONEY", user.money - 1], ws)
+                        broadcastMessage(
+                            wss,
+                            ['NEW_BET', { id: Bet._id, title: title, challenger: user.name }],
+                            {
+                                type: 'success',
+                                msg: `New bet created by ${user.name}!`
+                            })
+                    }
                     break
                 }
                 case 'MAKE_BET': {
@@ -81,7 +89,7 @@ export default {
                                 console.log(res)
                                 res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
                             });
-
+                            sendData(["MONEY", user.money], ws)
                             sendData(["INIT", messages], ws)
                         }
                     }

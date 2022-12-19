@@ -49,7 +49,6 @@ const MainPage = () => {
     const [betMoney, setBetMoney] = useState(0);
     const [choice, setChoice] = useState('Success');
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [tmp, setTmp] = useState(false)
 
     useEffect(() => {
@@ -93,7 +92,7 @@ const MainPage = () => {
             <Title> All Bets Page </Title>
             {/* <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} /> */}
             {/* <StyledMenu> */}
-                <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
+            <StyledBotton icon={<UserOutlined />} onClick={() => setTmp(true)} > Forward to personal page </StyledBotton>
             {/* </StyledMenu> */}
 
             <CardWrapper>
