@@ -4,6 +4,7 @@ import { message as antdmsg } from "antd";
 
 const ChatContext = createContext({
     name: '',
+    result: '',
     login: false,
     register: false,
     user: {},
@@ -20,6 +21,7 @@ const ChatContext = createContext({
     createChatToBE: () => { },
     initChatToBE: () => { },
     inputToBE: () => { },
+    setResult: () => { },
 })
 
 const ChatProvider = (props) => {
@@ -30,6 +32,7 @@ const ChatProvider = (props) => {
     // const [name, setName] = useState('');
     const [name, setName] = useState('');
     const [money, setMoney] = useState(0);
+    const [result, setResult] = useState(''); // 結果是成功還是失敗
 
     const [friends, setFriends] = useState([]);
     const [newChatRoom, setNewChatRoom] = useState({});
@@ -205,6 +208,7 @@ const ChatProvider = (props) => {
             allBets,
             makedBets,
             money,
+            result,
 
             setName,
             registerToBE,
@@ -214,6 +218,7 @@ const ChatProvider = (props) => {
             createChatToBE,
             initChatToBE,
             inputToBE,
+            setResult,
         }}
         {...props}
     />
