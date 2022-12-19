@@ -12,6 +12,7 @@ const ChatContext = createContext({
     newChatRoom: {},
     messages: [],
     initChatRooms: [],
+    mail: [],
 
     setName: () => { },
     registerToBE: () => { },
@@ -52,7 +53,7 @@ const ChatProvider = (props) => {
     const [madeBets, setMadeBets] = useState([])
 
     useEffect(() => {
-        console.log(madeBets)
+        // console.log(madeBets)
     }, [madeBets])
 
     const [mail, setMail] = useState([
@@ -93,7 +94,7 @@ const ChatProvider = (props) => {
                 const [messages, made_messages] = payload
                 // setMoney(money)
                 setAllBets(messages)
-                setMadeBets(made_messages)
+                setMadeBets(made_messages) 
                 break
             }
             case 'REGISTER': {
@@ -211,6 +212,7 @@ const ChatProvider = (props) => {
             madeBets,
             money,
             result,
+            mail,
 
             setName,
             registerToBE,
