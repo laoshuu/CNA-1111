@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Divider, Typography } from 'antd';
+import { Divider, Space, Typography } from 'antd';
 
 import { HomeOutlined, PlusOutlined, MailOutlined, TransactionOutlined } from '@ant-design/icons';
 import { Card, Button, Col, Row, Statistic, Tabs, Drawer, List, Avatar } from 'antd';
@@ -185,10 +185,8 @@ const UserPage = () => {
     const CloseDrawer = () => {
         setIsMailOpen(false);
     };
-    const CreateMailMessage = () => {
 
-    }
-    const AllMail = ['aaa', 'bbb', 'ccc']
+
 
     return (
         <>
@@ -197,7 +195,6 @@ const UserPage = () => {
                 <StyledBotton icon={<HomeOutlined />} onClick={() => setBackToMain(true)} > Back to home page </StyledBotton>
                 <StyledBotton icon={<PlusOutlined />} onClick={() => showCreateBet()} > Create a new bet </StyledBotton>
                 <StyledBotton icon={<MailOutlined />} onClick={() => {
-                    CreateMailMessage();
                     ShowDrawer()
                     console.log('mail', mail)
                 }} > Open your mail box
@@ -241,15 +238,14 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
-                            
+
                             <div>
-                                <div>
-                                    <TransactionOutlined />
+                                <div style={{ display: 'flex', justifyContent: "start"}}>
+                                    <Avatar size={30} style={{ marginTop: '15px', borderBottom: '5px', backgroundColor: 'rgb(22, 119, 255)' }} icon={<TransactionOutlined />} />
+                                    <p> &nbsp; &nbsp; </p>
+                                    <p style={{ color: 'rgb(22, 119, 255)', fontSize: '18px', textAlign: 'left' }}> {item.title} </p>
                                 </div>
-                                <div>
-                                    <div strong> {item.title} </div>
-                                    <div> challenger: {item.challenger} </div>
-                                </div>
+                                <div> challenger: {item.challenger} </div>
                                 <div>spent: ${item.spent}</div>
                                 <div>earned: ${item.earned}</div>
                             </div>
