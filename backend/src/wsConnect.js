@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
-import { UserModel, BetModel, ChoiceModel, UserChoiceModel } from "./models/chatbox"
+import mongoose from "mongoose";
+import { UserModel, BetModel, UserChoiceModel, MailModel } from "./models/chatbox"
 
 const sendData = (data, ws) => { ws.send(JSON.stringify(data)); }
 const sendStatus = (payload, ws) => { sendData(["status", payload], ws); }
@@ -12,6 +13,10 @@ const broadcastMessage = (wss, data, status) => {
 };
 
 
+const returnMessage = () => {
+
+}
+
 export default {
     onMessage: (wss, ws) => (
         async (byteString) => {
@@ -21,15 +26,15 @@ export default {
                 case 'CREATE_BET': {
                     const { title, user_name } = payload;
                     const user = await UserModel.findOne({ name: user_name })
-                    if (user.money < 50)
+                    if (user.money < 5)
                         sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
                     else {
-                        await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -1 } })
+                        await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -5 } })
                         const Bet = new BetModel({ title: title, challenger: user._id })
                         await Bet.save()
 
-                        sendData(["status", { type: "info", msg: "$1 dollar spent" }], ws)
-                        sendData(["MONEY", user.money - 1], ws)
+                        sendData(["status", { type: "info", msg: "$5 dollar spent" }], ws)
+                        sendData(["MONEY", user.money - 5], ws)
                         broadcastMessage(
                             wss,
                             ['NEW_BET', { id: Bet._id, title: title, challenger: user.name }],
@@ -91,122 +96,116 @@ export default {
 
                             const messages = []
                             await BetModel.find().populate("challenger").then((res) => {
-                                // console.log(res)
                                 res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
                             });
 
                             const maked_messages = []
-                            await UserChoiceModel.find({ user: user._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
-                                console.log(res)
+                            await UserChoiceModel.find({ name: name }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
                                 res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
                             })
 
+                            const maked_mails = []
+                            await UserModel.findOne({ name: name }).populate({ path: 'mailbox' }).then((user) => {
+                                console.log(user)
+                                user.mailbox.map((mail) => {
+                                    maked_mails.push({ title: mail.bet_title, challenger: mail.bet_challenger, result: mail.result, spent: mail.spent, earned: mail.earn })
+                                })
+                            })
+
+
+
                             sendData(["MONEY", user.money], ws)
-                            sendData(["INIT", [messages, maked_messages]], ws)
+                            sendData(["ALLBETS", messages], ws)
+                            sendData(["MADEBETS", maked_messages], ws)
+                            sendData(["MAIL", maked_mails], ws)
+                            // sendData(["INIT", [messages, maked_messages]], ws)
                         }
                     }
 
                     break
                 }
                 case 'END_BET': {
-                    const { bet_id, result } = payload;
-
-                    const choices = await ChoiceModel.find({ bet_id: bet_id })
-                    const correct_choice = await UserChoiceModel.find({ bet_id: bet_id, choice: result })
+                    const { name, bet_id, result } = payload;
 
                     let correct_num, wrong_num, correct_money, wrong_money, challenger_award;
-                    correct_num = correct_choice.count()
-                    wrong_num = choices.count() - correct_num
+                    const correct_choice = await UserChoiceModel.find({ bet_id: bet_id, choice: result })
+                        .then((res) => correct_num = res.length)
+                    const choices = await UserChoiceModel.find({ bet_id: bet_id })
+                        .then((res) => wrong_num = res.length - correct_num)
+
+                    await UserChoiceModel.aggregate([{ $match: { bet_id: new mongoose.Types.ObjectId(`${bet_id}`), choice: result } }
+                        , { $group: { _id: null, amount: { $sum: '$bet_money' } } }
+                    ]).then((res) => {
+                        correct_money = (!res[0]) ? (0) : res[0].amount
+                    })
+
+                    await UserChoiceModel.aggregate([{ $match: { bet_id: new mongoose.Types.ObjectId(`${bet_id}`) } }
+                        , { $group: { _id: null, amount: { $sum: '$bet_money' } } }
+                    ]).then((res) => {
+                        wrong_money = (!res[0]) ? (0) : res[0].amount - correct_money
+                    })
+
+
                     // calculate correct_money, wrong_money
-
-
-                    if (correct_choice.choice === 'Success') {
-                        if (correct_num === 0)
-                            challenger_award = correct_money + wrong_money;
-                        else
-                            challenger_award = fail_money / (success_num + 1)
+                    console.log("correct_money:", correct_money, "wrong money:", wrong_money)
+                    if (result === 'Success') {
+                        challenger_award = (correct_money + wrong_money) / (correct_num + 1)
                     }
-                    else if (correct_choice.choice === 'Fail') {
+                    else if (result === 'Fail') {
                         challenger_award = 0
                     }
+                    console.log("challenger gets:", challenger_award)
 
-                    // challenger get rewards
-                    const Bet = await BetModel.findOne({ bet_id: bet_id })
-                    const challenger = Bet.challenger
-                    await UserModel.updateOne({ "name": challenger }, { $inc: { "money": challenger_award } })
-                    // Bet makers get rewards
-                    // const win_bet = await UserChoiceModel.find({ choice: correct_choice._id })
-                    correct_choice.map(async (e) => {
-                        await UserModel.updateOne({ "_id": e.user }, { $inc: { "money": (fail_money + success_money - challenger_award) * e.bet_money / success_money } })
+                    // // challenger get rewards
+                    let challenger, bet_title;
+                    const Bet = await BetModel.findOne({ _id: bet_id }).then(async (bet) => {
+                        challenger = bet.challenger
+                        bet_title = bet.title
+                        const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: 5, earn: challenger_award })
+                        await UserModel.updateOne({ "_id": bet.challenger }, { $inc: { "money": challenger_award }, $push: { mailbox: mail._id } })
+                        await mail.save()
+
                     })
-                    break
-                }
-
-
-                case 'CHAT': {
-                    console.log("now in chat")
-                    const { name, to } = payload
-                    const chatBoxName = makeName(name, to)
-                    // const chatBox = new ChatBoxModel({ name: chatBoxName, users: [name, to] });
-                    // chatBox.save()
-
-                    const user1 = await validateUser(name);
-                    const user2 = await validateUser(to);
-                    const box = await validateChatBox(chatBoxName, [user1, user2])
-                    // await user1.chatBoxes.push(box._id)
-                    // await user1.save()
-                    // await user2.chatBoxes.push(box._id)
-                    // await user2.save()
-                    console.log(box)
-                    const init_messages = []
-                    box.messages.map((e) => {
-                        init_messages.push({ name: e.sender.name, body: e.body })
+                    // // Bet makers get rewards and everyone receive messages 
+                    await UserChoiceModel.find({ bet_id: bet_id }).then((bets) => {
+                        bets.map(async (bet) => {
+                            console.log(bet)
+                            if (bet.choice !== result) {
+                                const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: bet.bet_money, earn: 0 })
+                                await UserModel.updateOne({ "_id": bet.user }, { $push: { "mailbox": mail } })
+                                await mail.save()
+                            }
+                            else {
+                                const award = (correct_money + wrong_money - challenger_award) * bet.bet_money / correct_money
+                                console.log("award", award)
+                                const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: bet.bet_money, earn: award })
+                                await UserModel.updateOne({ "_id": bet.user }, { $inc: { "money": award }, $push: { "mailbox": mail } })
+                                await mail.save()
+                            }
+                        })
                     })
-                    console.log(init_messages)
-                    sendData(["init", init_messages], ws);
 
-                    break
-                }
-                case 'MESSAGE': {
-                    // console.log(await ChatBoxModel.find())
+                    await BetModel.deleteMany({ _id: bet_id })
+                    await UserChoiceModel.deleteMany({ bet_id: bet_id })
 
-                    console.log("now in msg")
-                    const { name, to, body } = payload
-                    const chatBoxName = makeName(name, to)
 
-                    // Save payload to DB
-                    const chatBox = await ChatBoxModel.findOne({ name: chatBoxName });
-                    const sender = await UserModel.findOne({ name: name });
-                    const message = new MessageModel({ chatBox: chatBox._id, sender: sender._id, body: body })
-                    try {
-                        await message.save();
-                    } catch (e) {
-                        throw new Error
-                            ("Message DB save error: " + e);
-                    }
-                    chatBox.messages.push(message)
-                    await chatBox.save()
-                    // Respond to client
-                    broadcastMessage(
-                        wss,
-                        ['output', [{ name, body }]],
+                    const messages = []
+                    await BetModel.find().populate("challenger").then((res) => {
+                        res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
+                    });
+
+                    // const maked_messages = []
+                    // await UserChoiceModel.find({ user: challenger._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                    //     res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
+                    // })
+
+                    // sendData(["MONEY", user.money], ws)
+                    broadcastMessage(wss, ['ALLBETS', messages],
                         {
-                            type: 'success',
-                            msg: 'Message sent.'
+                            type: 'info',
+                            msg: `Bet ${bet_title} closed.`
                         })
 
-                    break
-                }
-                case 'CLEAR': {
-                    Message.deleteMany({}, () => {
-                        broadcastMessage(
-                            wss,
-                            ['cleared'],
-                            {
-                                type: 'info',
-                                msg: 'Message cache cleared.'
-                            })
-                    })
                     break
                 }
 

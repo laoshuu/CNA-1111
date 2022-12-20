@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Divider, Typography } from 'antd';
+
 import { HomeOutlined, PlusOutlined, MailOutlined, TransactionOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Statistic, Tabs, Drawer, List, Avatar } from 'antd';
+import { Card, Button, Col, Row, Statistic, Tabs, Drawer, List, Avatar } from 'antd';
+
 import { useChat } from "../Hooks/useChat";
 import styled from "styled-components";
 
@@ -34,6 +36,10 @@ const BetBoxWrapper = styled.div`
     flex-direction: column;
     overflow: auto;
 `
+const StyledCard = styled(Card)`
+    width: 95%;
+    margin: 10px
+`;
 
 const TitleStyled = styled(Title)`
     align-itself: top;
@@ -69,6 +75,11 @@ const UserPage = () => {
     const [GoToMail, setGoToMail] = useState(false)
 
     useEffect(() => {
+        if (name === '')
+            navigate("error")
+    }, [name])
+
+    useEffect(() => {
         if (BackToMain) {
             navigate("/main")
         }
@@ -98,7 +109,6 @@ const UserPage = () => {
 
     // 產生 Bet List 的 DOM nodes
     const displayList = (betList, CreateOrMake) => {
-        // console.log("betList:", betList)
         return (
             betList.length === 0 ? (
                 <p style={{ color: '#ccc' }}> No bet... </p>
@@ -110,13 +120,40 @@ const UserPage = () => {
                                 // console.log("filter create:", CreateOrMake)
                                 return (<BetCard betTitle={title} challenger={challenger} betType={CreateOrMake} betID={id} key={i} />)
                             }
-                            else if (CreateOrMake === 'Make' && challenger !== name) {
-                                // console.log("filter make")
-                                return (<BetCard betTitle={title} challenger={challenger} betType={CreateOrMake} betID={id} key={i} />)
-                            }
                             else {
                                 return
                             }
+                        })
+                    }
+                </BetBoxWrapper>
+            )
+        )
+    }
+
+    const displayListMakeBet = (betList, CreateOrMake) => {
+        // console.log("make", betList)
+        return (
+            betList.length === 0 ? (
+                <p style={{ color: '#ccc' }}> No bet was made... </p>
+            ) : (
+                <BetBoxWrapper>
+                    {
+                        betList.map(({ id, title, challenger, choice, money }, i) => {
+                            // console.log("filter make")
+                            return (
+                                <StyledCard
+                                    hoverable
+                                    title={title}
+                                    bordered={true}
+                                    onClick={() => { console.log("hello") }}
+
+                                >
+                                    <p>challenger: {challenger}</p>
+                                    <p>money: {money}</p>
+                                    <p>choice: {choice}</p>
+                                </StyledCard>
+                            )
+
                         })
                     }
                 </BetBoxWrapper>
@@ -135,10 +172,10 @@ const UserPage = () => {
         });
         setMakeBetBox({
             label: "The Bet You Make",
-            children: displayList(madeBets, "Make"),
+            children: displayListMakeBet(madeBets, "Make"),
             key: "Make"
         });
-    }, [allBets]);
+    }, [allBets, madeBets]);
 
     // Create Mail Drawer
     const [isMailOpen, setIsMailOpen] = useState(false);
@@ -183,6 +220,7 @@ const UserPage = () => {
                 }}
                 activeKey={activeKey}
                 items={[createBetBox, makeBetBox]}
+                style={{ width: "inherit" }}
             />
             <CreateBetModal
                 open={isModalOpen}
@@ -203,7 +241,8 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
-                            <div style={{ alignSelf }}>
+                            
+                            <div>
                                 <div>
                                     <TransactionOutlined />
                                 </div>
@@ -211,7 +250,8 @@ const UserPage = () => {
                                     <div strong> {item.title} </div>
                                     <div> challenger: {item.challenger} </div>
                                 </div>
-                                <div>{item.money_change}</div>
+                                <div>spent: ${item.spent}</div>
+                                <div>earned: ${item.earned}</div>
                             </div>
                         </List.Item>
                     )}
