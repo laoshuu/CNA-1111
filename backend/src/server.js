@@ -17,7 +17,7 @@ const db = mongoose.connection
 db.once('open', () => {
     console.log("MongoDB connected!");
     wss.on('connection', (ws) => {
-        // console.log("Client connected");
+        console.log("Client connected");
         // Define WebSocket connection logic
         // wsConnect.initData(ws);
         ws.id = uuidv4()
@@ -27,6 +27,7 @@ db.once('open', () => {
 });
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () =>
-    console.log(`Example app listening on port ${PORT}!`),
+const HOST = '192.168.1.104'
+server.listen(PORT, HOST, () =>
+    console.log(`Example app listening on port ${HOST}:${PORT}!`),
 );
