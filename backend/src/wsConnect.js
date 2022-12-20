@@ -101,7 +101,6 @@ export default {
                             const messages = []
                             await BetModel.find().populate("challenger").then((res) => {
                                 res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
-                                console.log(res)
                             });
 
                             const maked_messages = []
@@ -111,7 +110,6 @@ export default {
 
                             const maked_mails = []
                             await UserModel.findOne({ name: name }).populate({ path: 'mailbox' }).then((user) => {
-                                console.log(user)
                                 user.mailbox.map((mail) => {
                                     maked_mails.push({ title: mail.bet_title, challenger: mail.bet_challenger, result: mail.result, spent: mail.spent, earned: mail.earn })
                                 })
