@@ -22,4 +22,4 @@ export const setsAreEqual = (a, b) => {
     });
 }
 
-export const client = new WebSocket('ws://localhost:4000')
+export const client = new WebSocket('ws://192.168.1.121:4000')

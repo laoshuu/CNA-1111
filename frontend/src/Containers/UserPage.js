@@ -134,21 +134,21 @@ const UserPage = () => {
                 <BetBoxWrapper>
                     {
                         betList.map(({ id, title, challenger, choice, money }, i) => {
-                                // console.log("filter make")
+                            // console.log("filter make")
                             return (
                                 <StyledCard
-                                hoverable
-                                title={title}
-                                bordered={true}
-                                onClick={() => { console.log("hello") }}
-                
+                                    hoverable
+                                    title={title}
+                                    bordered={true}
+                                    onClick={() => { console.log("hello") }}
+
                                 >
                                     <p>challenger: {challenger}</p>
                                     <p>money: {money}</p>
                                     <p>choice: {choice}</p>
                                 </StyledCard>
                             )
-                        
+
                         })
                     }
                 </BetBoxWrapper>
@@ -170,7 +170,7 @@ const UserPage = () => {
             children: displayListMakeBet(madeBets, "Make"),
             key: "Make"
         });
-    }, [allBets, makedBets]);
+    }, [allBets, madeBets]);
 
     // Create Mail Drawer
     const [isMailOpen, setIsMailOpen] = useState(false);
@@ -181,7 +181,7 @@ const UserPage = () => {
         setIsMailOpen(false);
     };
     const CreateMailMessage = () => {
-        
+
     }
     const AllMail = ['aaa', 'bbb', 'ccc']
 
@@ -215,7 +215,7 @@ const UserPage = () => {
                 }}
                 activeKey={activeKey}
                 items={[createBetBox, makeBetBox]}
-                style={{width: "inherit"}}
+                style={{ width: "inherit" }}
             />
             <CreateBetModal
                 open={isModalOpen}

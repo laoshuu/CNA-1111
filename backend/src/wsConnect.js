@@ -13,10 +13,6 @@ const broadcastMessage = (wss, data, status) => {
 };
 
 
-const returnMessage = () => {
-
-}
-
 export default {
     onMessage: (wss, ws) => (
         async (byteString) => {
@@ -26,8 +22,10 @@ export default {
                 case 'CREATE_BET': {
                     const { title, user_name } = payload;
                     const user = await UserModel.findOne({ name: user_name })
-                    if (user.money < 5)
+                    if (user.money < 5) {
                         sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
+                        console.log("Bet Creation Failed.")
+                    }
                     else {
                         await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -5 } })
                         const Bet = new BetModel({ title: title, challenger: user._id })
@@ -42,6 +40,7 @@ export default {
                                 type: 'success',
                                 msg: `New bet created by ${user.name}!`
                             })
+                        console.log("Bet Created!")
                     }
                     break
                 }
@@ -49,8 +48,10 @@ export default {
                     const { bet_id, username, choice_name, bet_money } = payload;
                     const user = await UserModel.findOne({ name: username })
                     // check enough money
-                    if (user.money < bet_money)
+                    if (user.money < bet_money) {
                         sendData(["status", { type: "error", msg: "Not enough money!" }], ws)
+                        console.log("Bet Make Failed.")
+                    }
                     else {
                         await UserModel.updateOne({ "name": user.name }, { $inc: { "money": -bet_money } })
                         const newBet = new UserChoiceModel({ user: user._id, bet_id: bet_id, choice: choice_name, bet_money: bet_money })
@@ -61,6 +62,7 @@ export default {
                         })
                         sendData(["status", { type: "info", msg: `$${bet_money} dollar spent` }], ws)
                         sendData(["MONEY", user.money - bet_money], ws)
+                        console.log("Bet Made!")
                     }
                     break
                 }
@@ -76,6 +78,7 @@ export default {
                         const newUser = new UserModel({ name: name, password: hashPassword, money: 100 })
                         newUser.save()
                         sendData(["REGISTER", true], ws)
+                        console.log("New User Registered!")
                     }
                     break
                 }
@@ -87,9 +90,10 @@ export default {
                         sendData(["status", { type: "error", msg: "Username does not exist" }], ws)
                     else {
                         const password_is_valid = await bcrypt.compare(password, user.password)
-                        if (!password_is_valid)
+                        if (!password_is_valid) {
                             sendData(["status", { type: "error", msg: "Wrong password" }], ws)
-
+                            console.log("User Login Failed.")
+                        }
                         else {
                             sendData(["LOGIN", true], ws)
                             sendData(["status", { type: "success", msg: "Successfully Login!" }], ws)
@@ -97,6 +101,7 @@ export default {
                             const messages = []
                             await BetModel.find().populate("challenger").then((res) => {
                                 res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
+                                console.log(res)
                             });
 
                             const maked_messages = []
@@ -106,6 +111,7 @@ export default {
 
                             sendData(["MONEY", user.money], ws)
                             sendData(["INIT", [messages, maked_messages]], ws)
+                            console.log("User Login!")
                         }
                     }
 
@@ -183,7 +189,7 @@ export default {
 
                     // sendData(["MONEY", user.money], ws)
                     sendData(["INIT", [messages, maked_messages]], ws)
-
+                    console.log("Bet Ended.")
                     break
                 }
 
