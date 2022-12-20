@@ -38,9 +38,9 @@ export default function Register() {
         <Card style={{ width: '70%', textAlign: 'center' }}>
             <Row>
                 <Col span={24}>
-                    <Title>My Chat Room</Title>
+                    <Title>Let's Bet</Title>
                     <Title level={4} style={{ color: 'gray' }}>
-                        Sign up to get an access to join your chat rooms with your friends.
+                        Sign up to get an access to make bet with your friends.
                     </Title>
                     <Form
                         form={form}

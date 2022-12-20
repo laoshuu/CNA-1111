@@ -75,6 +75,11 @@ const UserPage = () => {
     const [GoToMail, setGoToMail] = useState(false)
 
     useEffect(() => {
+        if (name === '')
+            navigate("error")
+    }, [name])
+
+    useEffect(() => {
         if (BackToMain) {
             navigate("/main")
         }
@@ -236,6 +241,7 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
+                            
                             <div>
                                 <div>
                                     <TransactionOutlined />
@@ -244,7 +250,8 @@ const UserPage = () => {
                                     <div strong> {item.title} </div>
                                     <div> challenger: {item.challenger} </div>
                                 </div>
-                                <div>{item.money_change}</div>
+                                <div>spent: ${item.spent}</div>
+                                <div>earned: ${item.earned}</div>
                             </div>
                         </List.Item>
                     )}

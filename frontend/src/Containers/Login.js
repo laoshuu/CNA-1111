@@ -51,9 +51,9 @@ export default function Login() {
         <Card style={{ width: '70%', textAlign: 'center' }}>
             <Row>
                 <Col span={24}>
-                    <Title>My Chat Room</Title>
+                    <Title>Let's Bet</Title>
                     <Title level={4} style={{ color: 'gray' }}>
-                        Log in to join your chat rooms with your friends.
+                        Log in to make bet with your friends.
                     </Title>
                     <Form
                         form={form}

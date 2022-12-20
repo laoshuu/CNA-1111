@@ -18,7 +18,7 @@ const StyledCard = styled(Card)`
 
 const BetCard = ({ betTitle, challenger, betType, betID }) => {
     // End Bet Modal
-    const { result, madeBet } = useChat();
+    const { name, result, madeBet, endBet } = useChat();
     const [isEndModalOpen, setIsEndModalOpen] = useState(false);
     const showEndBet = () => {
         setIsEndModalOpen(true);
@@ -28,6 +28,7 @@ const BetCard = ({ betTitle, challenger, betType, betID }) => {
         // send message to backend
         console.log(result)
         console.log(betID)
+        endBet(name, betID, result)
         setIsEndModalOpen(false)
     }
 

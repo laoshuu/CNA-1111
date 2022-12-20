@@ -41,13 +41,7 @@ const ChatProvider = (props) => {
     const [messages, setMessages] = useState([]);
     const [initChatRooms, setInitChatRooms] = useState([]);
 
-    const [allBets, setAllBets] = useState([
-        // { title: "去北車吃飯", challenger: "路人甲" },
-        // { title: "搭笑傲飛鷹", challenger: "路人乙" },
-        // { title: "搭笑傲飛鷹", challenger: "路人乙" },
-        // { title: "去北車吃飯", challenger: "路人甲" },
-        // { title: "去北車吃飯", challenger: "路人甲" },
-    ]);
+    const [allBets, setAllBets] = useState([]);
 
     // betID, betTitle, challenger, betMoney, choice
     // variable name: id, title, challenger, money, choice
@@ -91,11 +85,26 @@ const ChatProvider = (props) => {
         const { data } = byteString;
         const [task, payload] = JSON.parse(data);
         switch (task) {
-            case 'INIT': {
-                const [messages, made_messages] = payload
-                // setMoney(money)
+            // case 'INIT': {
+            //     const [messages, made_messages] = payload
+            //     // setMoney(money)
+            //     setAllBets(messages)
+            //     setMadeBets(made_messages)
+            //     break
+            // }
+            case 'ALLBETS': {
+                const messages = payload
                 setAllBets(messages)
-                setMadeBets(made_messages) 
+                break
+            }
+            case 'MADEBETS': {
+                const messages = payload
+                setMadeBets(messages)
+                break
+            }
+            case 'MAIL': {
+                const mails = payload
+                setMail(mails)
                 break
             }
             case 'REGISTER': {
@@ -122,6 +131,9 @@ const ChatProvider = (props) => {
             case 'MAKE_BET': {
                 const made_messages = payload
                 setMadeBets([...madeBets, made_messages])
+                break
+            }
+            case 'END_BET': {
                 break
             }
             case 'users': {
@@ -186,9 +198,9 @@ const ChatProvider = (props) => {
         sendData(['MAKE_BET', { bet_id: input_BetName, username: input_Username, choice_name: input_ChoiceName, bet_money: input_BetMoney }]);
     }
     // End Bet - BetName, Username, ChoiceName, BetMoney
-    const endBet = (input_betID, input_ChoiceName) => {
+    const endBet = (input_name, input_betID, input_ChoiceName) => {
         // setName(input_name)
-        sendData(['END_BET', { bet_id: input_betID, result: input_ChoiceName }]);
+        sendData(['END_BET', { name: input_name, bet_id: input_betID, result: input_ChoiceName }]);
     }
 
 

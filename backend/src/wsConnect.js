@@ -31,7 +31,7 @@ export default {
                         const Bet = new BetModel({ title: title, challenger: user._id })
                         await Bet.save()
 
-                        sendData(["status", { type: "info", msg: "$1 dollar spent" }], ws)
+                        sendData(["status", { type: "info", msg: "$5 dollar spent" }], ws)
                         sendData(["MONEY", user.money - 5], ws)
                         broadcastMessage(
                             wss,
@@ -105,20 +105,31 @@ export default {
                             });
 
                             const maked_messages = []
-                            await UserChoiceModel.find({ user: user._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                            await UserChoiceModel.find({ name: name }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
                                 res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
                             })
 
+                            const maked_mails = []
+                            await UserModel.findOne({ name: name }).populate({ path: 'mailbox' }).then((user) => {
+                                console.log(user)
+                                user.mailbox.map((mail) => {
+                                    maked_mails.push({ title: mail.bet_title, challenger: mail.bet_challenger, result: mail.result, spent: mail.spent, earned: mail.earn })
+                                })
+                            })
+
                             sendData(["MONEY", user.money], ws)
-                            sendData(["INIT", [messages, maked_messages]], ws)
+                            sendData(["ALLBETS", messages], ws)
+                            sendData(["MADEBETS", maked_messages], ws)
+                            sendData(["MAIL", maked_mails], ws)
                             console.log("User Login!")
+
                         }
                     }
 
                     break
                 }
                 case 'END_BET': {
-                    const { bet_id, result } = payload;
+                    const { name, bet_id, result } = payload;
 
                     let correct_num, wrong_num, correct_money, wrong_money, challenger_award;
                     const correct_choice = await UserChoiceModel.find({ bet_id: bet_id, choice: result })
@@ -150,25 +161,30 @@ export default {
                     console.log("challenger gets:", challenger_award)
 
                     // // challenger get rewards
-                    let challenger;
+                    let challenger, bet_title;
                     const Bet = await BetModel.findOne({ _id: bet_id }).then(async (bet) => {
                         challenger = bet.challenger
-                        const mail = new MailModel({ bet: bet.title, result: result, spent: 5, earn: challenger_award })
-                        await UserModel.updateOne({ "_id": bet.challenger }, { $inc: { "money": challenger_award }, $push: { "mailbox": mail } })
+                        bet_title = bet.title
+                        const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: 5, earn: challenger_award })
+                        await UserModel.updateOne({ "_id": bet.challenger }, { $inc: { "money": challenger_award }, $push: { mailbox: mail._id } })
+                        await mail.save()
+
                     })
                     // // Bet makers get rewards and everyone receive messages 
                     await UserChoiceModel.find({ bet_id: bet_id }).then((bets) => {
                         bets.map(async (bet) => {
                             console.log(bet)
                             if (bet.choice !== result) {
-                                const mail = new MailModel({ bet: bet.title, result: result, spent: bet.bet_money, earn: 0 })
-                                await UserModel.updateOne({ "_id": bet.challenger }, { $push: { "mailbox": mail } })
+                                const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: bet.bet_money, earn: 0 })
+                                await UserModel.updateOne({ "_id": bet.user }, { $push: { "mailbox": mail } })
+                                await mail.save()
                             }
                             else {
                                 const award = (correct_money + wrong_money - challenger_award) * bet.bet_money / correct_money
                                 console.log("award", award)
-                                const mail = new MailModel({ bet: bet.title, result: result, spent: bet.bet_money, earn: award })
+                                const mail = new MailModel({ bet_title: bet_title, bet_challenger: name, result: result, spent: bet.bet_money, earn: award })
                                 await UserModel.updateOne({ "_id": bet.user }, { $inc: { "money": award }, $push: { "mailbox": mail } })
+                                await mail.save()
                             }
                         })
                     })
@@ -182,14 +198,20 @@ export default {
                         res.map((bet) => messages.push({ id: bet._id, title: bet.title, challenger: bet.challenger.name }))
                     });
 
-                    const maked_messages = []
-                    await UserChoiceModel.find({ user: challenger._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
-                        res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
-                    })
+                    // const maked_messages = []
+                    // await UserChoiceModel.find({ user: challenger._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                    //     res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
+                    // })
 
-                    // sendData(["MONEY", user.money], ws)
-                    sendData(["INIT", [messages, maked_messages]], ws)
+
+
+                    broadcastMessage(wss, ['ALLBETS', messages],
+                        {
+                            type: 'info',
+                            msg: `Bet ${bet_title} closed.`
+                        })
                     console.log("Bet Ended.")
+
                     break
                 }
 
