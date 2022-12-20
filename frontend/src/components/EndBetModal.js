@@ -10,7 +10,7 @@ import { useChat } from '../Hooks/useChat';
 const { Title, Paragraph, Text, Link } = Typography;
 
 const EndBetModal = ({ open, onCreate, onCancel }) => {
-    const { setResult } = useChat();
+    const { result, setResult } = useChat();
     const [form] = Form.useForm();
 
     const [fileList, setFileList] = useState([]);
@@ -50,12 +50,13 @@ const EndBetModal = ({ open, onCreate, onCancel }) => {
         <Modal
             open={open}
             onOk={() => {
-                form.validateFields().then((values) => {
-                    form.resetFields()
-                    onCreate(values)
-                }).catch((err) => {
-                    window.alert(err)
-                })
+                // form.validateFields().then((values) => {
+                //     form.resetFields()
+                //     onCreate(values)
+                // }).catch((err) => {
+                //     window.alert(err)
+                // })
+                onCreate(result)
             }}
             onCancel={onCancel}
             // title='End your Bet'

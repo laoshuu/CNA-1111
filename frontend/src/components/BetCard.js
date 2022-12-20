@@ -26,8 +26,7 @@ const BetCard = ({ betTitle, challenger, betType, betID }) => {
     const Modal_on_create = (title) => {
         // Already exist
         // send message to backend
-        console.log(result)
-        console.log(betID)
+        
         endBet(name, betID, result)
         setIsEndModalOpen(false)
     }
