@@ -40,7 +40,7 @@ function NoMatch() {
     <div>
       <h2>Oops!</h2>
       <p>
-        <Link to="/">Go to the <b>My Chat Room</b> login page</Link>
+        <Link to="/">Go to the <b>Let's Bet</b> login page</Link>
       </p>
     </div>
   );
