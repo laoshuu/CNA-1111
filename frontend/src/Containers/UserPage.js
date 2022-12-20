@@ -203,7 +203,7 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
-                            <div style={{alignSelf}}>
+                            <div style={{ alignSelf }}>
                                 <div>
                                     <TransactionOutlined />
                                 </div>
