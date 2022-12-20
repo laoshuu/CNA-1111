@@ -241,6 +241,7 @@ const UserPage = () => {
                                 description={<p> challenger: {item.challenger} </p>}
                             />
                             <div> {item.money_change} </div> */}
+                            
                             <div>
                                 <div>
                                     <TransactionOutlined />
