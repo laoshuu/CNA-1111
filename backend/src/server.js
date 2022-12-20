@@ -27,7 +27,7 @@ db.once('open', () => {
 });
 
 const PORT = process.env.PORT || 4000;
-const HOST = '192.168.1.104'
+const HOST = '192.168.1.121'
 server.listen(PORT, HOST, () =>
     console.log(`Example app listening on port ${HOST}:${PORT}!`),
 );

@@ -241,9 +241,9 @@ const UserPage = () => {
 
                             <div>
                                 <div style={{ display: 'flex', justifyContent: "start"}}>
-                                    <Avatar size={30} style={{ marginTop: '15px', borderBottom: '5px', backgroundColor: 'rgb(22, 119, 255)' }} icon={<TransactionOutlined />} />
+                                    <Avatar size={30} style={{ marginTop: '15px', borderBottom: '5px', backgroundColor: 'rgb(135, 109, 90)' }} icon={<TransactionOutlined />} />
                                     <p> &nbsp; &nbsp; </p>
-                                    <p style={{ color: 'rgb(22, 119, 255)', fontSize: '18px', textAlign: 'left' }}> {item.title} </p>
+                                    <p style={{ color: 'rgb(135, 109, 90)', fontSize: '18px', textAlign: 'left' }}> {item.title} </p>
                                 </div>
                                 <div> challenger: {item.challenger} </div>
                                 <div>spent: ${item.spent}</div>
