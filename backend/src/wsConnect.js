@@ -104,7 +104,8 @@ export default {
                             });
 
                             const maked_messages = []
-                            await UserChoiceModel.find({ name: name }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                            await UserChoiceModel.find({ user: user._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
+                                console.log("res",res)
                                 res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
                             })
 
