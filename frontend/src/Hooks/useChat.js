@@ -7,12 +7,11 @@ const ChatContext = createContext({
     result: '',
     login: false,
     register: false,
-    user: {},
-    friends: [],
-    newChatRoom: {},
-    messages: [],
-    initChatRooms: [],
     mail: [],
+    allBets: [],
+    madeBets: [],
+
+
 
     setName: () => { },
     registerToBE: () => { },
@@ -20,44 +19,21 @@ const ChatContext = createContext({
     createBet: () => { },
     makeBet: () => { },
     endBet: () => { },
-    createChatToBE: () => { },
-    initChatToBE: () => { },
-    inputToBE: () => { },
     setResult: () => { },
 })
 
 const ChatProvider = (props) => {
     const [login, setLogin] = useState(false);
     const [register, setRegister] = useState(false);
-
-    const [user, setUser] = useState({});
-    // const [name, setName] = useState('');
     const [name, setName] = useState('');
     const [money, setMoney] = useState(0);
     const [result, setResult] = useState(''); // 結果是成功還是失敗
-
-    const [friends, setFriends] = useState([]);
-    const [newChatRoom, setNewChatRoom] = useState({});
-    const [messages, setMessages] = useState([]);
-    const [initChatRooms, setInitChatRooms] = useState([]);
-
     const [allBets, setAllBets] = useState([]);
 
     // betID, betTitle, challenger, betMoney, choice
     // variable name: id, title, challenger, money, choice
     const [madeBets, setMadeBets] = useState([])
-
-    useEffect(() => {
-        // console.log(madeBets)
-    }, [madeBets])
-
-    const [mail, setMail] = useState([
-        { title: "去北車吃飯", challenger: "路人甲", money_change: 20 },
-        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: 60 },
-        { title: "搭笑傲飛鷹", challenger: "路人乙", money_change: -20 },
-        { title: "去北車吃飯", challenger: "路人甲", money_change: -30 },
-        { title: "去北車吃飯", challenger: "路人甲", money_change: 50 },
-    ]);
+    const [mail, setMail] = useState([]);
 
     const displayStatus = (input_status) => {
         if (input_status.msg) {
@@ -85,13 +61,7 @@ const ChatProvider = (props) => {
         const { data } = byteString;
         const [task, payload] = JSON.parse(data);
         switch (task) {
-            // case 'INIT': {
-            //     const [messages, made_messages] = payload
-            //     // setMoney(money)
-            //     setAllBets(messages)
-            //     setMadeBets(made_messages)
-            //     break
-            // }
+
             case 'ALLBETS': {
                 const messages = payload
                 setAllBets(messages)
@@ -119,7 +89,6 @@ const ChatProvider = (props) => {
             }
             case 'NEW_BET': {
                 const new_bet = payload;
-                console.log(payload)
                 setAllBets([...allBets, new_bet])
                 break
             }
@@ -133,40 +102,9 @@ const ChatProvider = (props) => {
                 setMadeBets([...madeBets, made_messages])
                 break
             }
-            case 'END_BET': {
-                break
-            }
-            case 'users': {
-                const users = payload;
-                const curUser = users.filter(each_user => each_user.name === name)
-                const curFriends = users.filter(each_user => each_user.name !== name)
-                setUser(curUser);
-                setFriends(curFriends);
-                break;
-            }
-            case 'createChat': {
-                const newChatRoom = payload;
-                setNewChatRoom(newChatRoom);
-                break;
-            }
-            case 'initChat': {
-                const { allMessages, allChatRooms } = payload;
-                setMessages(allMessages);
-                setInitChatRooms(allChatRooms);
-                break;
-            }
-            case 'sendMessage': {
-                const curMessage = payload;
-                setMessages(prev => [...prev, { ...curMessage, is_read: true }]);
-                break;
-            }
-            case 'receiveMessage': {
-                const curMessage = payload;
-                setMessages(prev => [...prev, { ...curMessage, is_read: false }]);
-                break;
-            }
+
+
             case 'status': {
-                console.log(payload)
                 displayStatus(payload);
                 break;
             }
@@ -203,29 +141,11 @@ const ChatProvider = (props) => {
         sendData(['END_BET', { name: input_name, bet_id: input_betID, result: input_ChoiceName }]);
     }
 
-
-    const createChatToBE = (friend_names) => {
-        sendData(['createChat', { name: name, friend_names: friend_names }]);
-    }
-
-    const initChatToBE = () => {
-        sendData(['initChat', { name: name }]);
-    }
-
-    const inputToBE = (input_msg, friend_names) => {
-        sendData(['input', { name: name, message: input_msg, friend_names: friend_names }]);
-    }
-
     return <ChatContext.Provider
         value={{
             name,
             login,
             register,
-            user,
-            friends,
-            newChatRoom,
-            messages,
-            initChatRooms,
             allBets,
             madeBets,
             money,
@@ -238,9 +158,6 @@ const ChatProvider = (props) => {
             createBet,
             makeBet,
             endBet,
-            createChatToBE,
-            initChatToBE,
-            inputToBE,
             setResult,
         }}
         {...props}

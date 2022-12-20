@@ -105,7 +105,7 @@ export default {
 
                             const maked_messages = []
                             await UserChoiceModel.find({ user: user._id }).populate({ path: "bet_id", populate: "challenger" }).then((res) => {
-                                console.log("res",res)
+                                console.log("res", res)
                                 res.map((bet) => maked_messages.push({ id: bet.bet_id._id, title: bet.bet_id.title, challenger: bet.bet_id.challenger.name, money: bet.bet_money, choice: bet.choice }))
                             })
 
@@ -214,39 +214,6 @@ export default {
                     break
                 }
 
-                case 'input': {
-                    const { name, body } = payload
-                    // Save payload to DB
-                    const message = new Message({ name, body })
-                    try {
-                        await message.save();
-                    } catch (e) {
-                        throw new Error
-                            ("Message DB save error: " + e);
-                    }
-                    // Respond to client
-                    broadcastMessage(
-                        wss,
-                        ['output', [payload]],
-                        {
-                            type: 'success',
-                            msg: 'Message sent.'
-                        })
-
-                    break
-                }
-                case 'clear': {
-                    Message.deleteMany({}, () => {
-                        broadcastMessage(
-                            wss,
-                            ['cleared'],
-                            {
-                                type: 'info',
-                                msg: 'Message cache cleared.'
-                            })
-                    })
-                    break
-                }
                 default: break
             }
         }
