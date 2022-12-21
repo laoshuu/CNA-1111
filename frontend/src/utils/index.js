@@ -21,5 +21,5 @@ export const setsAreEqual = (a, b) => {
         return b.has(element);
     });
 }
-const serverIP = '172.20.10.3'
+const serverIP = '' // 輸入 server IP 位址
 export const client = new WebSocket(`ws://${serverIP}:4000/`)
