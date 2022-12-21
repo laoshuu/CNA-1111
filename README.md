@@ -1,4 +1,8 @@
 # CNA-1111
+### Prerequisute：
+    1. 分別進入 frontend / backend 輸入指令 yarn install，將所需的 node modules 載入
+    2. run command `cp .env.default .env`，填入需要的環境變數（自己的 MONGO_URL ）
+
 ### 連線方法：
     前端：
         1. 進到 frontend/src/utils/index.js，將 line 24 的 serverIP 變數改成 server 的 IPv4 Address
