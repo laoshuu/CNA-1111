@@ -21,5 +21,5 @@ export const setsAreEqual = (a, b) => {
         return b.has(element);
     });
 }
-
-export const client = new WebSocket('ws://192.168.1.121:4000/')
+const serverIP = '172.20.10.3'
+export const client = new WebSocket(`ws://${serverIP}:4000/`)
